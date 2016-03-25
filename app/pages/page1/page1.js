@@ -1,10 +1,10 @@
 import {Page} from 'ionic-angular';
-import {App1} from './app';
+import {Clicker} from './clicker';
 
 
 @Page({
     templateUrl: 'build/pages/page1/page1.html',
-    directives: [App1]
+    directives: [Clicker]
 })
 export class Page1 {
 }
