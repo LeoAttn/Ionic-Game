@@ -3,9 +3,9 @@ import {Component} from 'angular2/core'
 @Component({
     selector: 'hello',
     template: `
-        <h1>HELLO {{name}} !</h1>
-    `,
-    inputs: ['name']
+        <input #name (keyup)="1" />
+        <h1>HELLO {{name.value}} !</h1>
+    `
 })
 export class Hello {
 }

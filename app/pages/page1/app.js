@@ -5,7 +5,7 @@ import {Hello, Toto} from './hello'
     selector: 'app',
     template: `
         <h1>App</h1>
-        <hello [name]="'Léo'"></hello>
+        <hello></hello>
         <toto></toto>
     `,
     directives: [Hello, Toto]
