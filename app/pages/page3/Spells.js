@@ -6,26 +6,60 @@ import {createSpell, SpellComponent} from '../Components_Models/SpellsCreator'
 @Component({
     selector: 'spell-list',
     template: `
-    <spell *ngFor="#spell of spells" [spell]=spell></spell>
+    <spell *ngFor="#spell of spells | async" [spell]=spell></spell>
   `,
     directives: [SpellComponent]
 })
 
 export class SpellList {
     constructor() {
-        this.spells = [
+        this.spells = HeroService.data.map(heroData =>  [
             createSpell({
-                name: 'Fireball',
-                effects: [],
-                price: 300
+                name: 'X2',
+                description:"attaque X2 pendant 30sec",
+                effects: heroData.attackDamage * 2,
+                price: 1000 * heroData.level,
+                cooldown:600, //secondes
+                buy: false
             }),
 
             createSpell({
-                name: 'Chain Lightning',
+                name: 'fireball',
+                description:"inflige 1000 X lvl à l'ennemi",
                 effects: [],
-                price: 700
+                price: 10000 * heroData.level,
+                cooldown: 1800, //secondes
+                buy: false
+            }),
+
+            createSpell({
+                name: 'Warrior soul',
+                description: "dps des armes X 3 pendant 1min",
+                effects: [],
+                price: 100000 * heroData.level,
+                cooldown: 3600, //seconde
+                buy: false
+            }),
+
+            createSpell({
+                name: "Punch of King",
+                description: " inflige attaque X lvl",
+                effects: heroData.attackDamage * heroData.level,
+                price: 1000000* heroData.level,
+                cooldown:1200, // secondes
+                buy: false
+            }),
+
+            createSpell({
+                name: "Zeus roar",
+                description: "divise la vie de l'ennemi par le lvl actuel",
+                effect: [],
+                price: 10000000* heroData.level,
+                cooldown: 86400, //secondes
+                buy: false
             })
-        ]
+
+        ])
     }
 }
 

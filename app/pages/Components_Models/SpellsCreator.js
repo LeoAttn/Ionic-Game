@@ -3,28 +3,41 @@
  */
 export function createSpell({
     name,
+    description,
     effects,
     price
     }) {
     if (!name) throw Error('Name must be specified')
     return {
         name,
+        description,
         effects,
         price
     }
 
 }
+import {IONIC_DIRECTIVES} from 'ionic-angular'
 import {Component, Input} from 'angular2/core'
 @Component({
     selector: 'spell',
     template: `
-    <div>
-      <h1>{{spell.name}}</h1>
-      <h3>Effects</h3>
-      <h4 *ngFor="#effect of spell.effects">{{effect}}</h4>
-      <h3>Costs : {{spell.price}}</h3>
-    </div>
-  `
+    <ion-card>
+      <ion-card-header>
+        {{spell.name}}
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-list-header>Effects</ion-list-header>
+          <ion-item>{{spell.description}}</ion-item>
+        </ion-list>
+        <ion-list>
+          <ion-list-header>Cost</ion-list-header>
+          <ion-item>{{spell.price}} Gils</ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  `,
+    directives: [IONIC_DIRECTIVES]
 })
 
 export class SpellComponent {
