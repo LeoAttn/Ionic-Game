@@ -1,4 +1,4 @@
-import {Component} from 'angular2/core'
+import {Component, IONIC_DIRECTIVES} from 'angular2/core'
 import {Hello, Toto} from './hello'
 
 @Component({
@@ -8,7 +8,7 @@ import {Hello, Toto} from './hello'
         <hello></hello>
         <toto></toto>
     `,
-    directives: [Hello, Toto]
+    directives: [Hello, Toto, IONIC_DIRECTIVES]
 })
 export class App1 {
 }
