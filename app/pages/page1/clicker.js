@@ -1,5 +1,6 @@
 import {Component} from 'angular2/core'
-import {Page, Storage, LocalStorage} from 'ionic-angular'
+import {Page} from 'ionic-angular'
+import {StorageService} from '../../components/storage-service'
 import {Subject, Observable} from 'rxjs'
 
 const COUNTER = 'counter_storage_key'
@@ -12,9 +13,9 @@ const COUNTER = 'counter_storage_key'
     `
 })
 export class Clicker {
-    constructor() {
-        const localStorage = new Storage(LocalStorage);
-        const savedCount = Observable.fromPromise(localStorage.get(COUNTER))
+    constructor(storage:StorageService) {
+
+        const savedCount = Observable.fromPromise(storage.get(COUNTER))
             .map(toIntOrZero);
 
         this.clickStream = new Subject();
@@ -23,7 +24,7 @@ export class Clicker {
             .map(click => 1)
             .merge(savedCount)
             .scan((accumulator, current) => accumulator + current);
-        this.countStream.subscribe(count => localStorage.set(COUNTER, count));
+        this.countStream.subscribe(count => storage.set(COUNTER, count));
     }
 }
 

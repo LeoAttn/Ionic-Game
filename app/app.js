@@ -1,9 +1,15 @@
 import {App, Platform} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
 import {TabsPage} from './pages/tabs/tabs';
+import {StorageService} from './components/storage-service';
+import {HeroService} from './components/hero-service';
 
 
 @App({
+  viewProviders:[
+      StorageService,
+      HeroService
+  ],
   template: '<ion-nav [root]="rootPage"></ion-nav>',
   config: {} // http://ionicframework.com/docs/v2/api/config/Config/
 })
