@@ -3,6 +3,8 @@
  */
 import {Component} from 'angular2/core'
 import {createSpell, SpellComponent} from '../Components_Models/SpellsCreator'
+import {HeroService} from '../../components/hero-service'
+
 @Component({
     selector: 'spell-list',
     template: `
@@ -12,8 +14,8 @@ import {createSpell, SpellComponent} from '../Components_Models/SpellsCreator'
 })
 
 export class SpellList {
-    constructor() {
-        this.spells = HeroService.data.map(heroData =>  [
+    constructor(heroService:HeroService) {
+        this.spells = heroService.data.map(heroData =>  [
             createSpell({
                 name: 'X2',
                 description:"attaque X2 pendant 30sec",
