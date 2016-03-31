@@ -9,9 +9,8 @@ export class StorageService {
 
     initOrGet(key, defaultValue){
         var val;
-        var promise = this.get(key).then(function(v){val = v});
+        var promise = this.get(key).then(v => val = v);
         val = val ? val : defaultValue;
-        console.log(val);
         this.set(key, defaultValue);
         return promise;
     }

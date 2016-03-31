@@ -3,7 +3,8 @@
  */
 import {Component, Input} from "angular2/core";
 import {HeroService} from './hero-service';
-
+import {StorageService} from './storage-service'
+import {Subject, Observable} from 'rxjs'
 
 @Component({
     selector : 'buyable',
@@ -19,8 +20,14 @@ import {HeroService} from './hero-service';
 export class Buyable{
     @Input() item
 
-    constructor(herosService:HeroService){
+    constructor(herosService:HeroService, storageService:StorageService){
         this.herosService = herosService;
+        this.buyStream = new Subject();
+        this.buyStream.next(0);
+        this.computeMoneyStream = this.buyStream
+            .merge(herosService.moneyData)
+            .scan((a,b) => a+b);
+        this.computeMoneyStream.subscribe(count => storageService.set("playerMoney", count));
     }
 
     buy(){
@@ -29,6 +36,15 @@ export class Buyable{
          * increment lvl of this item and recompute stats
          *
          */
-        console.log("Click on item " + item.name + "for the price of" + item.price)
+        var money;
+        this.herosService.moneyData.subscribe(pMoney => money = pMoney);
+
+        if(money > this.item.price)
+        {
+            this.buyStream.next(-this.item.price);
+            //this.herosService.money -= this.item.price;
+
+        }
+        console.log("Click on item " + this.item.name + "for the price of" + this.item.price)
     }
 }
