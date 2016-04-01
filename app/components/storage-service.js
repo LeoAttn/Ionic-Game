@@ -1,5 +1,6 @@
 import {Injectable} from 'angular2/core';
 import {Storage, LocalStorage} from 'ionic-angular';
+import {Observable} from 'rxjs'
 
 @Injectable()
 export class StorageService {
@@ -8,15 +9,15 @@ export class StorageService {
     }
 
     initOrGet(key, defaultValue){
-        var val;
-        var promise = this.get(key).then(v => val = v);
-        val = val ? val : defaultValue;
-        this.set(key, defaultValue);
-        return promise;
+        var stream = this.get(key);
+        stream
+            .map(val => val ? val : defaultValue)
+            .subscribe(val=> this.set(key,val));
+        return stream;
     }
 
     get(key){
-        return this.storage.get(key);
+        return Observable.fromPromise(this.storage.get(key));
     }
 
     set(key, value){

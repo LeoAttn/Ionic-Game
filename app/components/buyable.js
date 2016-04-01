@@ -25,7 +25,7 @@ export class Buyable{
         this.buyStream = new Subject();
         this.buyStream.next(0);
         this.computeMoneyStream = this.buyStream
-            .merge(herosService.moneyData)
+            .merge(this.herosService.moneyData)
             .scan((a,b) => a+b);
         this.computeMoneyStream.subscribe(count => storageService.set("playerMoney", count));
     }
