@@ -18,6 +18,7 @@ export function createSpell({
 }
 import {IONIC_DIRECTIVES} from 'ionic-angular'
 import {Component, Input} from 'angular2/core'
+import {Buyable} from '../../components/buyable'
 @Component({
     selector: 'spell',
     template: `
@@ -33,11 +34,12 @@ import {Component, Input} from 'angular2/core'
         <ion-list>
           <ion-list-header>Cost</ion-list-header>
           <ion-item>{{spell.price}} Gils</ion-item>
+          <button class="button button-dark" (clic)=buy()>Acheter</button>
         </ion-list>
       </ion-card-content>
     </ion-card>
   `,
-    directives: [IONIC_DIRECTIVES]
+    directives: [Buyable,IONIC_DIRECTIVES]
 })
 
 export class SpellComponent {
