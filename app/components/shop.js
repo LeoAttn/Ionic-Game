@@ -3,11 +3,13 @@
  */
 import {Component, Input} from 'angular2/core'
 import {Buyable} from "./buyable"
+import {HeroService} from "./hero-service"
 
 @Component({
     selector: 'shop',
     directives: [Buyable],
     template: `
+    <div></div>
     <ul>
         <buyable *ngFor="#item of items" [item]=item></buyable>
     </ul>

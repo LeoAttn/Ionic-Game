@@ -8,6 +8,15 @@ export class StorageService {
         this.storage = new Storage(LocalStorage);
     }
 
+    initOrGetValue(key, defaultValue){
+        var value;
+        var stream = this.get(key);
+        stream
+            .map(val => val ? val : defaultValue)
+            .subscribe(val=> {this.set(key, val); value = val});
+        return value;
+    }
+
     initOrGet(key, defaultValue) {
         var stream = this.get(key);
         stream
