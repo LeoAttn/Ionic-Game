@@ -9,7 +9,7 @@ import {Subject, Observable} from 'rxjs'
     selector: 'buyable',
     template: `
     <div>
-        <div>{{level | async | json}}</div>
+        <div>{{level | async}}</div>
         <img src={{item.name}}.png />
         <h3>{{item.name}}</h3>
         <h4>{{item.price}}</h4>

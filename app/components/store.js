@@ -11,7 +11,7 @@ const LEVEL_UP = 'LEVEL_UP';
 
 const reducers = {
     [STARTUP] : (prev, action) => prev,//On Startup load and set initial state with saved values
-    [LEVEL_UP] : (prev, action) => R.mergeWith(R.add, {hero:{level: prev.hero.level+1}})
+    [LEVEL_UP] : (prev, action) => R.mergeWith(R.add, {hero:{ level : 1}})
 };
 
 
