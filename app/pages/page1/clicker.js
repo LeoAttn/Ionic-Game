@@ -17,10 +17,10 @@ const LEVEL = 'level_key';
     directives: [IONIC_DIRECTIVES]
 })
 export class Clicker {
-    constructor(localStorage:StorageService, hero:HeroService) {
-        this.store = localStorage;
+    constructor(storage:StorageService, hero:HeroService) {
+        this.storage = storage;
 
-        const savedLevel = localStorage.get(LEVEL)
+        const savedLevel = storage.get(LEVEL)
             .map(toIntOrOne)
             .do(level => this.monsterHealth = level * 2)
             .do(() => this.healthStream = Observable.from([this.monsterHealth]));
@@ -34,7 +34,7 @@ export class Clicker {
             this.levelStream = Observable.from(this.levelStream
                 .map(level => {
                     let nextLevel = level + 1;
-                    this.store.set(LEVEL, nextLevel);
+                    this.storage.set(LEVEL, nextLevel);
                     this.monsterHealth = nextLevel * 2;
                     this.healthStream = Observable.from([this.monsterHealth]);
                     return nextLevel;
