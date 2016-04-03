@@ -1,9 +1,9 @@
 import {App, Platform} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
 import {TabsPage} from './pages/tabs/tabs';
-import {StorageService} from './components/storage-service';
+import {StorageService} from './storage-service';
 import {HeroService} from './components/hero-service';
-import {Store} from './components/store';
+import {Store} from './store';
 
 @App({
     viewProviders: [

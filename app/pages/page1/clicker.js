@@ -1,7 +1,7 @@
 import {Component} from 'angular2/core'
 import {Storage, LocalStorage, IONIC_DIRECTIVES} from 'ionic-angular'
 import {Subject, Observable} from 'rxjs'
-import {StorageService} from '../../components/storage-service'
+import {StorageService} from '../../storage-service'
 import {HeroService} from '../../components/hero-service'
 
 const MONSTER_LIFE = 'monster_life_key';

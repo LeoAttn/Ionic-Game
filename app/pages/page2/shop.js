@@ -3,7 +3,7 @@
  */
 import {Component, Input} from 'angular2/core'
 import {Buyable} from "./buyable"
-import {Store} from "./store"
+import {Store} from "./../../store"
 
 @Component({
     selector: 'shop',
@@ -34,5 +34,15 @@ export class Shop {
             }
         ];
         this.money = this.store.state.map(state => {return state.hero.money });
+        this.store.addRoute('BUY_ITEM', this.buyItem);
+    }
+
+    buyItem(prev, action){
+        if(prev.hero.money >= action.item.price){
+            prev.hero.money = prev.hero.money - action.item.price;
+            prev.hero.inventory.add(action.item);
+            return prev;
+        }
+        action.error = "Not Enough Money";
     }
 }

@@ -2,7 +2,7 @@
  * Created by bluedragonfly on 3/25/16.
  */
 import {Component, Input} from "angular2/core";
-import {Store} from './store';
+import {Store} from './../../store';
 
 @Component({
     selector: 'buyable',

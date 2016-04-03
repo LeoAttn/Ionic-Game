@@ -2,7 +2,7 @@
  * Created by bluedragonfly on 3/31/16.
  */
 import {Injectable} from 'angular2/core'
-import {StorageService} from './storage-service'
+import {StorageService} from './../storage-service'
 import {Observable} from 'rxjs'
 
 @Injectable()

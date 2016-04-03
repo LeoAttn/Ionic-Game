@@ -3,7 +3,7 @@
  */
 import {IONIC_DIRECTIVES, Modal,Alert, NavController} from 'ionic-angular'
 import {Component, Input} from 'angular2/core'
-import {Buyable} from '../../components/buyable'
+import {Buyable} from '../page2/buyable'
 import {SpellModal} from './spell-modal'
 
 @Component({
