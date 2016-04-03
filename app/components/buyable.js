@@ -9,7 +9,7 @@ import {Subject, Observable} from 'rxjs'
     selector: 'buyable',
     template: `
     <div>
-        <div>{{level | async}}</div>
+        <div>{{level | async | json}}</div>
         <img src={{item.name}}.png />
         <h3>{{item.name}}</h3>
         <h4>{{item.price}}</h4>
@@ -22,7 +22,7 @@ export class Buyable {
 
     constructor(store:Store) {
         this.store = store;
-        this.level = this.store.state.map(state => state.hero.level);
+        this.level = this.store.state.map(state => {console.log("State:",state); return state.hero.level });
     }
 
     buy() {

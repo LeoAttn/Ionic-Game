@@ -11,7 +11,7 @@ const LEVEL_UP = 'LEVEL_UP';
 
 const reducers = {
     [STARTUP] : (prev, action) => prev,//On Startup load and set initial state with saved values
-    [LEVEL_UP] : (prev, action) => R.mergeWith(R.add, {hero:{ level : 1}})
+    [LEVEL_UP] : (prev, action) => { prev.hero.level = prev.hero.level +1; return prev} /// Need to return a State
 };
 
 
@@ -22,7 +22,8 @@ export class Store {
 
         const initState = {
             hero:{
-                level:1
+                level:1,
+                name :""
             }
         };
 
@@ -37,9 +38,12 @@ export class Store {
             .startWith({type: STARTUP})
             .scan( (prevState, action) => {
                 console.log(prevState, action);
+                console.log(prevState.hero);
                 const reducer = reducers[action.type];
-                if (reducer) return reducer(prevState, action);
-                return prevState
+                if (reducer)
+                    return reducer(prevState, action);
+                else
+                    return prevState;
         }, initState);
     }
 
