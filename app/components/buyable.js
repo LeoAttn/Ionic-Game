@@ -3,7 +3,6 @@
  */
 import {Component, Input} from "angular2/core";
 import {Store} from './store';
-import {Subject, Observable} from 'rxjs'
 
 @Component({
     selector: 'buyable',
@@ -23,12 +22,7 @@ export class Buyable {
         this.store = store;
     }
 
-    buy() {
+    buy(){
         this.store.dispatch({type: 'BUY_ITEM', item : this.item});
-        /*
-         * Need to get player money verify if he has enough money, and then, set it minus the item price
-         * increment lvl of this item and rec        this.storage = new Storage(LocalStorage); vomp this.storage = new Storage(LocalStorage);ute stats
-         *
-         */
     }
 }

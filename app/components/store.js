@@ -13,7 +13,7 @@ const BUY_ITEM = 'BUY_ITEM';
 const reducers = {
     [STARTUP] : (prev, action) => prev,//On Startup load and set initial state with saved values
     [LEVEL_UP] : (prev, action) => {
-        prev.hero.level = prev.hero.level +1; return prev}, /// Need to return a State
+        prev.hero.level = prev.hero.level +1},
     [BUY_ITEM] : (prev, action) =>{
         if(prev.hero.money >= action.item.price){
             prev.hero.money = prev.hero.money - action.item.price;
@@ -21,7 +21,6 @@ const reducers = {
             return prev;
         }
         action.error = "Not Enough Money";
-        return prev;
     }
 };
 
@@ -49,22 +48,17 @@ export class Store {
             }
         };
 
-        this.actions = [
-            STARTUP,
-            LEVEL_UP
-        ];
-
         this.actionStream = new Subject();
 
         this.state = this.actionStream
             .startWith({type: STARTUP})
             .scan( (prevState, action) => {
-                console.log(prevState, action);
-                console.log(prevState.hero);
                 const reducer = reducers[action.type];
                 if (reducer) {
                     reducer(prevState, action);
                     prevState.action = action.type;
+
+
                 }
                 return prevState;
         }, initState);
