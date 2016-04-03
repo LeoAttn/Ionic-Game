@@ -18,5 +18,15 @@ export class HeroService {
                 return ({name, money, attackDamage, level, spells});
             });
     }
+
+    attack(savedLife, damage) {
+        const lostHealthStream = Observable
+            .combineLatest(damage, savedLife, (damage, life) => damage % life)
+            .startWith(0)
+
+       return Observable
+            .combineLatest(lostHealthStream, savedLife, (lostHealth, life) => life - lostHealth)
+
+    }
 }
 

@@ -3,5 +3,8 @@
 }
 
 #clicBtn {
-  padding: 20px;
+  $size: 200px;
+  width: $size;
+  height: $size;
+  border-radius: $size/2;
 }

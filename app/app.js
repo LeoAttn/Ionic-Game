@@ -28,4 +28,6 @@ export class MyApp {
             StatusBar.styleDefault();
         });
     }
+
+
 }

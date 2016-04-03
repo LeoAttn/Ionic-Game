@@ -1,6 +1,8 @@
 import {Component} from 'angular2/core'
-import {Storage, LocalStorage} from 'ionic-angular'
+import {Storage, LocalStorage, IONIC_DIRECTIVES} from 'ionic-angular'
 import {Subject, Observable} from 'rxjs'
+import {StorageService} from '../../components/storage-service'
+import {HeroService} from '../../components/hero-service'
 
 const MONSTER_LIFE = 'monster_life_key';
 const LEVEL = 'level_key';
@@ -9,33 +11,36 @@ const LEVEL = 'level_key';
     selector: 'clicker',
     template: `
         <h2>Level : {{levelStream | async}}</h2>
-        <h2>Value : {{healthStream | async}}</h2>
-        <button (click)="clickStream.next()" id="clicBtn">Increment</button>
-    `
+        <h2>Health : {{healthStream | async}}</h2>
+        <button round large (click)="clickBtn()" id="clicBtn">OUTCH</button>
+    `,
+    directives: [IONIC_DIRECTIVES]
 })
 export class Clicker {
-    constructor() {
-        const localStorage = new Storage(LocalStorage);
-        localStorage.set(MONSTER_LIFE, 10);
-        const savedCount = Observable.fromPromise(localStorage.get(MONSTER_LIFE))
-            .map(toIntOrZero);
-        const savedLevel = Observable.fromPromise(localStorage.get(LEVEL))
-            .map(toIntOrZero);
+    constructor(storage:StorageService, hero:HeroService) {
+        this.storage = storage;
 
-        this.clickStream = new Subject();
-        //this.levelStream = new Subject().merge(savedLevel);
+        const savedLevel = storage.get(LEVEL)
+            .map(toIntOrOne)
+            .do(level => this.monsterHealth = level * 2)
+            .do(() => this.healthStream = Observable.from([this.monsterHealth]));
 
-        const lostHealthStream =  this.clickStream
-            .map(click => 1)
-            .scan( (a,b) => a + b)
-            .map(sum => sum % 10)
-            .startWith(0)
+        this.levelStream = new Observable.from(savedLevel);
+    };
 
-        this.healthStream = lostHealthStream.map(x => 10 - x)
-
-        this.healthStream.subscribe(count => localStorage.set(MONSTER_LIFE, count));
-        //this.levelStream.subscribe(count => localStorage.set(LEVEL, count));
-    }
+    clickBtn() {
+        this.healthStream = Observable.from([this.monsterHealth -= 1]);
+        if (this.monsterHealth <= 0) {
+            this.levelStream = Observable.from(this.levelStream
+                .map(level => {
+                    let nextLevel = level + 1;
+                    this.storage.set(LEVEL, nextLevel);
+                    this.monsterHealth = nextLevel * 2;
+                    this.healthStream = Observable.from([this.monsterHealth]);
+                    return nextLevel;
+                }));
+        }
+    };
 }
 
-const toIntOrZero = saved => saved ? parseInt(saved) : 0;
+const toIntOrOne = saved => saved ? parseInt(saved) : 1;
