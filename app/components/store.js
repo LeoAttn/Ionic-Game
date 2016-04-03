@@ -8,10 +8,21 @@ import * as R from 'ramda';
 
 const STARTUP = 'STARTUP';
 const LEVEL_UP = 'LEVEL_UP';
+const BUY_ITEM = 'BUY_ITEM';
 
 const reducers = {
     [STARTUP] : (prev, action) => prev,//On Startup load and set initial state with saved values
-    [LEVEL_UP] : (prev, action) => { prev.hero.level = prev.hero.level +1; return prev} /// Need to return a State
+    [LEVEL_UP] : (prev, action) => {
+        prev.hero.level = prev.hero.level +1; return prev}, /// Need to return a State
+    [BUY_ITEM] : (prev, action) =>{
+        if(prev.hero.money >= action.item.price){
+            prev.hero.money = prev.hero.money - action.item.price;
+            prev.hero.inventory.add(action.item);
+            return prev;
+        }
+        action.error = "Not Enough Money";
+        return prev;
+    }
 };
 
 
@@ -23,7 +34,18 @@ export class Store {
         const initState = {
             hero:{
                 level:1,
-                name :""
+                money: 10000,
+                name :"",
+                inventory: {
+                    spells : [],
+                    equipement: [],
+                    add:function(item){
+                        if(item.type = "spells")
+                            this.spells.push(this.item);
+                        else if(item.type = "equipement")
+                            this.equipement.push(this.item);
+                    }
+                }
             }
         };
 
@@ -40,10 +62,11 @@ export class Store {
                 console.log(prevState, action);
                 console.log(prevState.hero);
                 const reducer = reducers[action.type];
-                if (reducer)
-                    return reducer(prevState, action);
-                else
-                    return prevState;
+                if (reducer) {
+                    reducer(prevState, action);
+                    prevState.action = action.type;
+                }
+                return prevState;
         }, initState);
     }
 

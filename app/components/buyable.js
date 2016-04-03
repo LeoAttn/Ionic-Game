@@ -9,7 +9,6 @@ import {Subject, Observable} from 'rxjs'
     selector: 'buyable',
     template: `
     <div>
-        <div>{{level | async | json}}</div>
         <img src={{item.name}}.png />
         <h3>{{item.name}}</h3>
         <h4>{{item.price}}</h4>
@@ -22,11 +21,10 @@ export class Buyable {
 
     constructor(store:Store) {
         this.store = store;
-        this.level = this.store.state.map(state => {console.log("State:",state); return state.hero.level });
     }
 
     buy() {
-        this.store.dispatch({type: 'LEVEL_UP'});
+        this.store.dispatch({type: 'BUY_ITEM', item : this.item});
         /*
          * Need to get player money verify if he has enough money, and then, set it minus the item price
          * increment lvl of this item and rec        this.storage = new Storage(LocalStorage); vomp this.storage = new Storage(LocalStorage);ute stats

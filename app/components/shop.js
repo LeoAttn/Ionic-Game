@@ -3,13 +3,13 @@
  */
 import {Component, Input} from 'angular2/core'
 import {Buyable} from "./buyable"
-import {HeroService} from "./hero-service"
+import {Store} from "./store"
 
 @Component({
     selector: 'shop',
     directives: [Buyable],
     template: `
-    <div></div>
+    <div>Money : {{money | async}} $</div>
     <ul>
         <buyable *ngFor="#item of items" [item]=item></buyable>
     </ul>
@@ -17,7 +17,8 @@ import {HeroService} from "./hero-service"
 })
 
 export class Shop {
-    constructor() {
+    constructor(store:Store) {
+        this.store = store;
         this.items = [
             {
                 name: "Doigt",//Un clic supplémentaire par doigt,
@@ -32,5 +33,6 @@ export class Shop {
                 price: 100
             }
         ];
+        this.money = this.store.state.map(state => {return state.hero.money });
     }
 }
