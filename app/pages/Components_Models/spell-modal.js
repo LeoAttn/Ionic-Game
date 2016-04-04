@@ -8,7 +8,7 @@ import {Page, NavParams, ViewController} from 'ionic-angular'
           </ion-title>
           <ion-buttons start>
             <button (click)="dismiss()">
-              <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
+              <ion-icon name="md-close"></ion-icon>
             </button>
           </ion-buttons>
         </ion-toolbar>

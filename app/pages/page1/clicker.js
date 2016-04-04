@@ -4,9 +4,6 @@ import {Subject, Observable} from 'rxjs'
 import {StorageService} from '../../storage-service'
 import {HeroService} from '../../components/hero-service'
 
-const MONSTER_LIFE = 'monster_life_key';
-const LEVEL = 'level_key';
-
 @Component({
     selector: 'clicker',
     template: `
@@ -17,11 +14,10 @@ const LEVEL = 'level_key';
     directives: [IONIC_DIRECTIVES]
 })
 export class Clicker {
-    constructor(storage:StorageService, hero:HeroService) {
-        this.storage = storage;
+    constructor(hero:HeroService) {
+        this.hero = hero;
 
-        const savedLevel = storage.get(LEVEL)
-            .map(toIntOrOne)
+        const savedLevel = hero.level
             .do(level => this.monsterHealth = level * 2)
             .do(() => this.healthStream = Observable.from([this.monsterHealth]));
 
@@ -29,18 +25,14 @@ export class Clicker {
     };
 
     clickBtn() {
-        this.healthStream = Observable.from([this.monsterHealth -= 1]);
+        this.monsterHealth = this.hero.attack(this.monsterHealth);
         if (this.monsterHealth <= 0) {
-            this.levelStream = Observable.from(this.levelStream
-                .map(level => {
-                    let nextLevel = level + 1;
-                    this.storage.set(LEVEL, nextLevel);
-                    this.monsterHealth = nextLevel * 2;
-                    this.healthStream = Observable.from([this.monsterHealth]);
-                    return nextLevel;
-                }));
+            let nextLevel = this.hero.levelUp();
+            this.levelStream = Observable.from([nextLevel]);
+            this.monsterHealth = nextLevel * 2;
+            this.healthStream = Observable.from([this.monsterHealth]);
+        } else {
+            this.healthStream = Observable.from([this.monsterHealth]);
         }
     };
 }
-
-const toIntOrOne = saved => saved ? parseInt(saved) : 1;
