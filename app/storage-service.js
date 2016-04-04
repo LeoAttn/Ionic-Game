@@ -9,11 +9,22 @@ export class StorageService {
     }
 
     initOrGetValue(key, defaultValue){
+        console.log("DEfault val: ", defaultValue);
         var value;
         var stream = this.get(key);
         stream
             .map(val => val ? val : defaultValue)
-            .subscribe(val=> {this.set(key, val); value = val});
+            .subscribe(val=> {this.set(key, val); console.log("Load val : ",val); value = val});
+        return value;
+    }
+
+    initOrGetJSON(key, defaultValue){
+        console.log(defaultValue);
+        var value;
+        var stream = this.get(key);
+        stream
+            .map(val => val ? val : defaultValue)
+            .subscribe(val=> {this.set(key, val); console.log("Load val : ",val); value = val});
         return value;
     }
 

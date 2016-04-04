@@ -12,31 +12,27 @@ export class Store {
 
     constructor(storage:StorageService) {
 
+        this.storage = storage;
         this.router = new Router();
-        const initState = {
+        this.initState = {
             hero:{
                 level:1,
                 money: 10000,
-                name :"",
+                name :"Noki",
                 inventory: {
                     spells : [],
-                    equipement: [],
-                    add:function(item){
-                        if(item.type = "spells")
-                            this.spells.push(this.item);
-                        else if(item.type = "equipement")
-                            this.equipement.push(this.item);
-                    }
+                    equipement: []
                 }
             }
         };
+
         this.actionStream = new Subject();
         this.state = this.actionStream
             .startWith({type: 'STARTUP'})
             .scan( (prevState, action) => {
                 this.router.route(prevState, action);
                 return prevState;
-        }, initState);
+        }, this.initState);
     }
 
     dispatch(action) {
