@@ -30,9 +30,7 @@ export class Clicker {
             let nextLevel = this.hero.levelUp();
             this.levelStream = Observable.from([nextLevel]);
             this.monsterHealth = nextLevel * 2;
-            this.healthStream = Observable.from([this.monsterHealth]);
-        } else {
-            this.healthStream = Observable.from([this.monsterHealth]);
         }
+        this.healthStream = Observable.from([this.monsterHealth]);
     };
 }

@@ -30,12 +30,11 @@ export class HeroService {
 
     levelUp() {
         let nextLevel = 0;
-        this.level = Observable.from(this.level
-            .map(level => level + 1)
-        );
+        this.level = this.level
+            .map(level => level + 1);
         this.level.subscribe(level => {
-            this.storage.set("playerLevel", level);
             nextLevel = level;
+            this.storage.set("playerLevel", level);
         });
         return nextLevel;
     }
