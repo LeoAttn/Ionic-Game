@@ -47,7 +47,8 @@ export class Shop {
             prev.hero.inventory[action.item.type].push(action.item);
             console.log(prev.hero.inventory);
         }
-        action.error = "Not Enough Money";
+        else
+            action.error = "Not Enough Money";
         return prev;
     }
 }

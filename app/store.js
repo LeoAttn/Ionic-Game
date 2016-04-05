@@ -28,16 +28,17 @@ export class Store {
                 level : 1,
                 health : 2,
                 name : "monster"
-            }
+            },
+            action : {}
         };
 
         this.actionStream = new Subject();
         this.state = this.actionStream
             .startWith({type: 'STARTUP'})
-            .scan( (prevState, action) => {//@FIXME CALLED MULTIPLE TIMES FOR NO REASON
+            .scan( (prevState, action) => {//@FIXME CALLED MULTIPLE TIME @PARTIALLY FIXED NEED MORE INFO
                 return this.router.route(prevState, action);
         }, this.initState);
-        this.state.map(state=>JSON.stringify(state)).subscribe(state => {storage.set("state", state);console.log("STATE : ", state)});
+        this.state.map(state=>JSON.stringify(state)).subscribe(state => {storage.set("state", state);console.log("Current State : ", state)});
     }
 
     dispatch(action) {
