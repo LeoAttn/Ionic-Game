@@ -11,7 +11,7 @@ import {Store} from './../../store';
         <img src={{item.name}}.png />
         <h3>{{item.name}}</h3>
         <h4>{{item.price}}</h4>
-        <button (click)="buy()">Acheter</button>
+        <button (click)="buy(item)">Acheter</button>
     </div>
     `
 })
@@ -22,7 +22,9 @@ export class Buyable {
         this.store = store;
     }
 
-    buy(){
+    buy(item){
+        console.log("ITEM : ",item);
+        console.log("CLICK on ITEM : ", this.item)
         this.store.dispatch({type: 'BUY_ITEM', item : this.item});
     }
 }

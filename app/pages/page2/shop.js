@@ -9,7 +9,6 @@ import {Store} from "./../../store"
     selector: 'shop',
     directives: [Buyable],
     template: `
-    <div>Money : {{money | async}} $</div>
     <ul>
         <buyable *ngFor="#item of items" [item]=item></buyable>
     </ul>
@@ -36,18 +35,19 @@ export class Shop {
                 type :"equipement"
             }
         ];
-        this.money = this.store.state.map(state => {return state.hero.money });
         this.store.addRoute('BUY_ITEM', this.buyItem);
     }
 
 
 
     buyItem(prev, action){
+
         if(prev.hero.money >= action.item.price){
-            console.log("BUY ITEM for price of ", action.item.price)
             prev.hero.money = prev.hero.money - action.item.price;
             prev.hero.inventory[action.item.type].push(action.item);
+            console.log(prev.hero.inventory);
         }
         action.error = "Not Enough Money";
+        return prev;
     }
 }

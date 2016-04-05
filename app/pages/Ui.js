@@ -2,6 +2,7 @@
  * Created by bluedragonfly on 4/3/16.
  */
 import {Component} from 'angular2/core'
+import {Observable} from 'rxjs';
 import {Store} from '../store';
 
 
@@ -16,8 +17,8 @@ import {Store} from '../store';
 export class UI {
     constructor(store:Store) {
         this.store = store;
-        this.name = store.state.map(state => state.hero.name);
-        this.money = store.state.map(state => state.hero.money)
+        this.name = this.store.state.map(state => state.hero.name);
+        this.money = this.store.state.map(state => state.hero.money);
     }
 }
 
