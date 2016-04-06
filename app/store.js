@@ -17,7 +17,7 @@ export class Store {
             hero:{
                 level:1,
                 attack : 1,
-                money: 10000,
+                money: 0,
                 name :"Noki",
                 inventory: {
                     spells : [],
