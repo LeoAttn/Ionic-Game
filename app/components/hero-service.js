@@ -4,8 +4,7 @@
 import {Injectable} from 'angular2/core'
 import {Observable} from 'rxjs'
 import {Store} from './../store'
-import * as R from 'ramda'
-
+import * as _ from 'lodash/fp'
 @Injectable()
 export class HeroService {
     constructor(store:Store) {
@@ -15,14 +14,14 @@ export class HeroService {
     }
 
     dispatch(action){
-        console.log("NEW ACTION IN HERO SERVICE")
+        console.log("NEW ACTION IN HERO SERVICE");
         this.store.dispatch(action);
     }
 
     attack(prev,action) {
         if(prev.monster.health - prev.hero.attack <= 0){
-            var level = R.add(prev.hero.level, 1);
-            return R.merge(prev, {
+            var level = _.add(prev.hero.level, 1);
+            return _.merge(prev, {
                 hero : {
                     level : level
                 },
@@ -33,7 +32,7 @@ export class HeroService {
             });
         }
         else {
-            return R.merge(prev, {
+            return _.merge(prev, {
                 monster : {
                     health : prev.monster.health - prev.hero.attack
                 }
