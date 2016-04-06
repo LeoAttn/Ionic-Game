@@ -9,9 +9,12 @@ export class Router{
     }
 
     route(prev, action){
-        if(this.actions[action.type]){
+        if(this.actions[action.type] && ! action.done){
             this.actions[action.type](prev, action);
+            action.done= true;
+            prev.action = action;
         }
+        return prev;
     }
 
     addAction(key, func){

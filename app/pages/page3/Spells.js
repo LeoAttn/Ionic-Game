@@ -22,6 +22,7 @@ export class SpellList {
                 effects: heroData.attackDamage * 2,
                 price: 1000 * heroData.level,
                 cooldown: 600, //secondes
+                timeEffect: 30,
                 status: "Acheter"
             },
 
@@ -40,7 +41,8 @@ export class SpellList {
                 effects: [],
                 price: 100000 * heroData.level,
                 cooldown: 3600, //seconde
-                status: false
+                timeEffect: 60,
+                status: "Acheter"
             },
 
             {
@@ -49,7 +51,7 @@ export class SpellList {
                 effects: heroData.attackDamage * heroData.level,
                 price: 1000000 * heroData.level,
                 cooldown: 1200, // secondes
-                status: false
+                status: "Acheter"
             },
 
             {
@@ -58,7 +60,7 @@ export class SpellList {
                 effect: [],
                 price: 10000000 * heroData.level,
                 cooldown: 86400, //secondes
-                status: false
+                status: "Acheter"
             }
         ])
     }
