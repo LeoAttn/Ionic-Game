@@ -3,11 +3,13 @@ import {StatusBar} from 'ionic-native';
 import {TabsPage} from './pages/tabs/tabs';
 import {StorageService} from './storage-service';
 import {HeroService} from './components/hero-service';
+import {ShopService} from './components/shop-service';
 import {Store} from './store';
 
 @App({
     viewProviders: [
         Store,
+        ShopService,
         StorageService,
         HeroService
     ],

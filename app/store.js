@@ -4,13 +4,11 @@
 import {Injectable} from 'angular2/core';
 import {StorageService} from './storage-service';
 import {Router} from './router'
-import {Observable, Subject} from 'rxjs';
+import {Observable, Subject, BehaviorSubject} from 'rxjs';
 
 @Injectable()
 export class Store {
-
     constructor(storage:StorageService) {
-
         this.storage = storage;
         this.router = new Router();
         this.initState = {
@@ -29,20 +27,45 @@ export class Store {
                 health : 2,
                 name : "monster"
             },
+            shop:{
+              items : [
+                  {
+                      name: "Doigt",//Un clic supplémentaire par doigt,
+                      price: 1,
+                      type :"equipement"
+                  },
+                  {
+                      name: "Bras Mécanique",//Structure de base
+                      price: 10,
+                      type :"equipement"
+                  },
+                  {
+                      name: "",//
+                      price: 100,
+                      type :"equipement"
+                  }
+              ]
+            },
             action : {}
         };
-
         this.actionStream = new Subject();
-        this.state = this.actionStream
-            .startWith({type: 'STARTUP'})
+        //this.addRoute("STARTUP", this.startup);
+        const stateStream = this.actionStream
+            .startWith({type: 'STARTUP', storage : this.storage, initState : this.initState})
             .scan( (prevState, action) => {//@FIXME CALLED MULTIPLE TIME @PARTIALLY FIXED NEED MORE INFO
                 return this.router.route(prevState, action);
         }, this.initState);
+        this.state = new BehaviorSubject(this.initState);
+        stateStream.subscribe(this.state);
         this.state.map(state=>JSON.stringify(state)).subscribe(state => {storage.set("state", state);console.log("Current State : ", state)});
     }
 
+    startup(prev, action){
+        action.storage.initOrGet("state", JSON.stringify(action.initState)).subscribe(state => action.initState = JSON.parse(state));
+        prev = action.initState;
+    }
+
     dispatch(action) {
-        console.log("IN DISPATCH ACTION ", action);
         this.actionStream.next(action)
     }
 

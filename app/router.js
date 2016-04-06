@@ -1,6 +1,7 @@
 /**
  * Created by bluedragonfly on 4/3/16.
  */
+import deepFreeze from 'deep-freeze'
 
 export class Router{
 
@@ -9,12 +10,15 @@ export class Router{
     }
 
     route(prev, action){
-        if(this.actions[action.type] && ! action.done){
-            this.actions[action.type](prev, action);
-            action.done= true;
-            prev.action = action;
+        deepFreeze(prev); // Make sure the reducer does not change the previous state
+        if(this.actions[action.type]){
+            const nextState = this.actions[action.type](prev, action);
+            deepFreeze(nextState); // Make sure no component will attempt to change the next current state
+            return nextState;
         }
-        return prev;
+        else{
+            return prev;
+        }
     }
 
     addAction(key, func){

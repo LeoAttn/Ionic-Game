@@ -1,7 +1,6 @@
 import {Component} from 'angular2/core'
 import {IONIC_DIRECTIVES} from 'ionic-angular'
 import {Subject, Observable} from 'rxjs'
-import {StorageService} from '../../storage-service'
 import {HeroService} from '../../components/hero-service'
 import {Store} from './../../store';
 
@@ -17,27 +16,13 @@ import {Store} from './../../store';
 })
 export class Clicker {
     constructor(store:Store, hero:HeroService) {
-        /*this.hero = hero;
-
-        const savedLevel = hero.level
-            .do(level => this.monsterHealth = level * 2)
-            .do(() => this.healthStream = Observable.from([this.monsterHealth]));
-
-        this.levelStream = new Observable.from(savedLevel);
-        */
+        this.hero = hero;
         this.store = store;
         this.levelStream = this.store.state.map(state => state.monster.level);
         this.healthStream = this.store.state.map(state => state.monster.health);
     };
 
     clickBtn() {
-        this.store.dispatch({type : "ATTACK"});//ATTACK THE CURRENT MONSTER
-       /* this.monsterHealth = this.hero.attack(this.monsterHealth);
-        if (this.monsterHealth <= 0) {
-            let nextLevel = this.hero.levelUp();
-            this.levelStream = Observable.from([nextLevel]);
-            this.monsterHealth = nextLevel * 2;
-        }
-        this.healthStream = Observable.from([this.monsterHealth]);*/
+        this.hero.dispatch({type : "ATTACK"});//ATTACK THE CURRENT MONSTER
     };
 }
