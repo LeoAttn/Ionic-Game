@@ -9,7 +9,10 @@ import {Store} from './../../store';
     selector: 'clicker',
     template: `
         <h2>Level : {{levelStream | async}}</h2>
-        <h2>Health : {{healthStream | async}}</h2>
+        <h2>Health : {{healthStream | async}} / {{healthMaxStream | async}}</h2>
+        <div>
+            <progress max="{{healthMaxStream | async}}" value="{{healthStream | async}}"></progress> 
+        </div>
         <button round large (click)="clickBtn()" id="clicBtn">OUTCH</button>
     `,
     directives: [IONIC_DIRECTIVES]
@@ -20,6 +23,7 @@ export class Clicker {
         this.store = store;
         this.levelStream = this.store.state.map(state => state.monster.level);
         this.healthStream = this.store.state.map(state => state.monster.health);
+        this.healthMaxStream = this.store.state.map(state => state.monster.healthMax);
     };
 
     clickBtn() {
