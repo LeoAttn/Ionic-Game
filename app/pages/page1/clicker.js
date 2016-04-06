@@ -9,8 +9,8 @@ import {Store} from './../../store';
     selector: 'clicker',
     template: `
         <h2>Level : {{levelStream | async}}</h2>
-        <h2>Health : {{healthStream | async}} / {{healthMaxStream | async}}</h2>
         <div>
+            <h2>Health : {{healthStream | async}} / {{healthMaxStream | async}}</h2>
             <progress max="{{healthMaxStream | async}}" value="{{healthStream | async}}"></progress> 
         </div>
         <button round large (click)="clickBtn()" id="clicBtn">OUTCH</button>
