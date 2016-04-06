@@ -14,31 +14,35 @@ export class Store {
         this.storage = storage;
         this.router = new Router();
         this.initState = {
-            hero:{
-                level:1,
-                attack : 1,
+            hero: {
+                level: 1,
+                attack: 1,
                 money: 0,
-                name :"Noki",
+                name: "Noki",
                 inventory: {
-                    spells : [],
+                    spells: [],
                     equipement: []
                 }
             },
-            monster:{
-                level : 1,
-                health : 2,
-                name : "monster"
+            monster: {
+                level: 1,
+                health: 2,
+                healthMax: 2,
+                name: "monster"
             },
-            action : {}
+            action: {}
         };
 
         this.actionStream = new Subject();
         this.state = this.actionStream
             .startWith({type: 'STARTUP'})
-            .scan( (prevState, action) => {//@FIXME CALLED MULTIPLE TIME @PARTIALLY FIXED NEED MORE INFO
+            .scan((prevState, action) => {//@FIXME CALLED MULTIPLE TIME @PARTIALLY FIXED NEED MORE INFO
                 return this.router.route(prevState, action);
-        }, this.initState);
-        this.state.map(state=>JSON.stringify(state)).subscribe(state => {storage.set("state", state);console.log("Current State : ", state)});
+            }, this.initState);
+        this.state.map(state=>JSON.stringify(state)).subscribe(state => {
+            storage.set("state", state);
+            console.log("Current State : ", state)
+        });
     }
 
     dispatch(action) {
@@ -46,8 +50,8 @@ export class Store {
         this.actionStream.next(action)
     }
 
-    addRoute(key, func){
-        this.router.addAction(key,func)
+    addRoute(key, func) {
+        this.router.addAction(key, func)
     }
 }
 
