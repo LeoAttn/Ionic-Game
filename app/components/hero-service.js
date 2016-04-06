@@ -21,13 +21,15 @@ export class HeroService {
     attack(prev,action) {
         if(prev.monster.health - prev.hero.attack <= 0){
             var level = _.add(prev.hero.level, 1);
+            var health =  Math.round(2 + Math.pow(1.4, prev.hero.level));
             return _.merge(prev, {
                 hero : {
                     level : level
                 },
                 monster: {
                     level : level,
-                    health : level*2
+                    health : health,
+                    healthMax : health
                 }
             });
         }

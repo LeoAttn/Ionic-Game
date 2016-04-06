@@ -53,7 +53,7 @@ export class Store {
         this.actionStream = new Subject();
         this.state = this.actionStream
             .startWith({type: 'STARTUP'})
-            .scan((prevState, action) => {//@FIXME CALLED MULTIPLE TIME @PARTIALLY FIXED NEED MORE INFO
+            .scan((prevState, action) => {
                 return this.router.route(prevState, action);
             }, this.initState);
         this.state.map(state=>JSON.stringify(state)).subscribe(state => {
