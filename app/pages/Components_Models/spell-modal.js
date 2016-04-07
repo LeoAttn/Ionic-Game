@@ -1,6 +1,6 @@
 import {Page, NavParams, ViewController} from 'ionic-angular'
 import {HeroService} from '../../components/hero-service'
-import {StorageService} from '../../storage-service'
+import {ShopService} from './../../components/shop-service';
 
 @Page({
     template: `
@@ -27,7 +27,7 @@ import {StorageService} from '../../storage-service'
                     <ion-list>
                         <ion-list-header>Cost</ion-list-header>
                         <ion-item>{{spell.price}} Gils</ion-item>
-                        <button class="button button-dark" (click)=buySpell()>{{spell.status}}</button>
+                        <button class="button button-dark" (click)=actionOnSpell()>{{spell.status}}</button>
                     </ion-list>
                 </ion-card-content>
             </ion-card>
@@ -36,31 +36,34 @@ import {StorageService} from '../../storage-service'
 })
 export class SpellModal {
 
-    constructor(params:NavParams, viewCtrl:ViewController, heroService:HeroService, storage:StorageService) {
+    constructor(params:NavParams, viewCtrl:ViewController, heroService: HeroService, shopService:ShopService) {
         this.spell = params.get('spell');
         this.view = viewCtrl;
         this.hero = heroService;
-        this.storage = storage;
+        this.shop = shopService
     }
 
-    buySpell() {
+    actionOnSpell() {
         if (this.spell.status == "Acheter") {
             this.spell.status = "Aqcuis";
+            //this.shop.dispatch({type :'BUY_SPELL', item : this.spell});
         }
 
         else if (this.spell.status == "Aqcuis") {
-            this.spell.status = "Chosen";
+            console.log(this.spell);
+            /*this.spell.status = "Chosen";
             console.log('OK');
-            this.hero.spells = this.hero.spells.map(spellTab => {
+            this.store.initState.hero.inventory.spells = this.store.initState.hero.inventory.spells(spellTab => {
                 console.log(typeof(spellTab));
                 spellTab.push(JSON.stringify(this.spell));
                 return spellTab
             });
 
-            this.hero.spells.subscribe(spellTab => {
+            this.store.initState.hero.inventory.spells.subscribe(spellTab => {
                 console.log(spellTab.description);
-                this.storage.set("equippedSpells", spellTab)
-            });
+                this.store.storage.set("equippedSpells", spellTab)
+            });*/
+            this.hero.dispatch({type: 'SELECTED_SPELL', spell: this.spell})
 
         } else {
             console.log("error");
