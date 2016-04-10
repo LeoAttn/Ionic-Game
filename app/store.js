@@ -90,26 +90,29 @@ export class Store {
             action: {}
         };
 
-        this.storage.initOrGet("state", JSON.stringify(this.initState)).subscribe(state => {
-            _.merge(this.initState, JSON.parse(state));
-            console.log('okokokok', this.initState);
-            console.log('yo', JSON.parse(state))
-        });
+        this.addRoute('INITSTATE', this.init);
         this.actionStream = new Subject();
         this.state = this.actionStream
             .startWith({type: 'STARTUP', storage: this.storage, initState: this.initState})
             .scan((prevState, action) => {
-                return this.router.route(prevState, action);
-            }, this.initState);
+                console.log("Action : ", action);
+                console.log("PREV : ", prevState);
+                var next = this.router.route(prevState, action);
+                console.log("CURRENT : ", next);
+                return next;
+            }, this.initState).share();
+        this.storage.initOrGet("state", JSON.stringify(this.initState)).map(state => JSON.parse(state)).subscribe(state => {
+            this.actionStream.next({type: 'INITSTATE', state : state});
+        });
+
         this.state.map(state=>JSON.stringify(state)).subscribe(state => {
             storage.set("state", state);
-            console.log("Current State : ", state)
         });
     }
 
-    startup(prev, action) {
-        action.storage.initOrGet("state", JSON.stringify(action.initState)).subscribe(state => action.initState = JSON.parse(state));
-        prev = action.initState;
+    init(prev, action) {
+        console.log ('state', action.state);
+        return action.state;
     }
 
     dispatch(action) {
