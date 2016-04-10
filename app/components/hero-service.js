@@ -82,7 +82,7 @@ export class HeroService {
 
     SelectedSpell(prev, action) {
 
-        var newState = _.merge(prev,{});
+        var newState = _.merge(prev, {});
         console.log(newState);
         var spellsOfHero = newState.hero.inventory.spells;
         var spellsInState = newState.shop.spells;
@@ -95,13 +95,13 @@ export class HeroService {
         });
         var result = _.concat(spellsOfHero, action.spell);
 
-        var index=0;
         spellsInState.forEach(function (spell, i) {
+
             if (spell.name == action.spell.name) {
-                index = i-1
+                console.log(spell.name + " " + action.spell.name);
+                spellsInState.splice(i, 1);
             }
         });
-
 
         return _.merge(newState, {
             hero: {
@@ -110,9 +110,10 @@ export class HeroService {
                 }
             },
             shop: {
-                spells: spellsInState.splice(index, 1)
+                spells: spellsInState
             }
         })
+
 
 
     }
