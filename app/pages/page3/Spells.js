@@ -15,11 +15,11 @@ import {Store} from './../../store';
 })
 
 export class SpellList {
-    constructor(store: Store) {
+    constructor( store: Store) {
         this.store = store;
         this.heroData = this.store.state.map(state => state.hero);
         this.monsterData = this.store.state.map(state => state.monster);
-        this.spells = this.heroData.map( hero =>[
+        /*this.spells = this.heroData.map( hero =>[
             {
                 name: 'X2',
                 description: "attaque X2 pendant 30sec",
@@ -27,8 +27,6 @@ export class SpellList {
                 price: 1000 * hero.level,
                 cooldown: 600, //secondes
                 timeEffect: 30,
-                status: "Acheter"
-
             },
 
             {
@@ -37,7 +35,6 @@ export class SpellList {
                 effects: [],
                 price: 10000 * hero.level,
                 cooldown: 1800, //secondes
-                status: "Acheter"
             },
 
             {
@@ -47,7 +44,6 @@ export class SpellList {
                 price: 100000 * hero.level,
                 cooldown: 3600, //seconde
                 timeEffect: 60,
-                status: "Acheter"
             },
 
             {
@@ -56,18 +52,20 @@ export class SpellList {
                 effects: hero.attack * hero.level,
                 price: 1000000 * hero.level,
                 cooldown: 1200, // secondes
-                status: "Acheter"
             },
 
             {
                 name: "Zeus roar",
                 description: "divise la vie de l'ennemi par le lvl actuel",
                 effect: [],
-                price: 10000000 * this.heroData.level,
+                price: 10000000 * hero.level,
                 cooldown: 86400, //secondes
-                status: "Acheter"
             }
-        ])
+        ]);*/
+
+        this.spells = this.store.state.map(state => state.shop.spells);
+
+
     }
 }
 
