@@ -37,17 +37,30 @@ export class HeroService {
     };
 
     activeSpell(prev, action) {
-        let date = new Date();
+        if (action.spell.endOfCooldown > Date.now()) {
+            let diff = (action.spell.endOfCooldown - Date.now()) / 1000;
+            console.log("COOLDOWN FOR " + action.spell.name + " : " + diff + "s");
+            return prev;
+        }
 
+        let date = new Date();
+        date = date.setSeconds(date.getSeconds() + action.spell.cooldown/10);
         prev.hero.inventory.spells.forEach(function (spell, i) {
             if (spell.name == action.spell.name) {
                 let clone = JSON.parse(JSON.stringify(prev));
                 clone.hero.inventory.spells[i] = _.merge(prev.hero.inventory.spells[i], {
-                    endOfCooldown: date.setDate(date.getSeconds() + action.spell.cooldown)
+                    endOfCooldown: date
                 });
                 prev = _.merge(prev, clone);
             }
         });
+
+        let interval = setInterval(() => {
+            if (date < Date.now()) {
+                console.log("END OF COOLDOWN FOR " + action.spell.name);
+                clearInterval(interval);
+            }
+        }, 1000);
 
         switch (action.spell.name) {
             case 'Fireball':
