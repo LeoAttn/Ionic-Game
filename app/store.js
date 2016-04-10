@@ -90,19 +90,23 @@ export class Store {
             action: {}
         };
 
-        this.addRoute('INITSTATE', this.init);
         this.actionStream = new Subject();
+
+        this.addRoute('STARTUP', this.startup);
+
         this.state = this.actionStream
-            .startWith({type: 'STARTUP', storage: this.storage, initState: this.initState})
             .scan((prevState, action) => {
                 console.log("Action : ", action);
                 console.log("PREV : ", prevState);
                 var next = this.router.route(prevState, action);
                 console.log("CURRENT : ", next);
                 return next;
-            }, this.initState).share();
+            }, this.initState)
+            .delay(1)
+            .share();
+
         this.storage.initOrGet("state", JSON.stringify(this.initState)).map(state => JSON.parse(state)).subscribe(state => {
-            this.actionStream.next({type: 'INITSTATE', state : state});
+            this.actionStream.next({type: 'STARTUP', state: state});
         });
 
         this.state.map(state=>JSON.stringify(state)).subscribe(state => {
@@ -110,7 +114,7 @@ export class Store {
         });
     }
 
-    init(prev, action) {
+    startup(prev, action) {
         console.log ('state', action.state);
         return action.state;
     }
