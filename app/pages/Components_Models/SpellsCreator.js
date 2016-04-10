@@ -4,6 +4,7 @@
 import {IONIC_DIRECTIVES, Modal,Alert, NavController} from 'ionic-angular'
 import {Component, Input} from 'angular2/core'
 import {SpellModal} from './spell-modal'
+import {Store} from '../../store'
 
 @Component({
     selector: 'spell',
@@ -21,8 +22,9 @@ import {SpellModal} from './spell-modal'
 export class SpellComponent {
     @Input() spell;
 
-    constructor(nav:NavController){
+    constructor(nav:NavController, store :Store){
         this.nav = nav
+        this.store = store
     }
 
     showModal(spell) {

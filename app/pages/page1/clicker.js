@@ -27,6 +27,6 @@ export class Clicker {
     };
 
     clickBtn() {
-        this.hero.dispatch({type : "ATTACK"});//ATTACK THE CURRENT MONSTER
+        this.hero.dispatch({type: "ATTACK"});//ATTACK THE CURRENT MONSTER
     };
 }
