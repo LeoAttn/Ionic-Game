@@ -33,7 +33,7 @@ import {Store} from '../../store'
                 </ion-card-content>
             </ion-card>
         </ion-content>
-    `
+        `
 })
 export class SpellModal {
 
