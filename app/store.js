@@ -12,42 +12,53 @@ export class Store {
         this.storage = storage;
         this.router = new Router();
         this.initState = {
-            hero:{
-                level:1,
-                attack : 1,
+            hero: {
+                level: 1,
+                attack: 1,
                 money: 10000,
-                name :"Noki",
+                name: "Noki",
                 inventory: {
-                    spells : [],
+                    spells: [{
+                        name: 'fireball',
+                        description: "inflige 1000 X lvl à l'ennemi",
+                        price: 1000,
+                        duration: 30,
+                        cooldown: 1800 //secondes
+                    }, {
+                        name: 'fireball2',
+                        description: "inflige 1000 X lvl à l'ennemi",
+                        price: 1000,
+                        cooldown: 1800 //secondes
+                    }],
                     equipement: []
                 }
             },
-            monster:{
-                level : 1,
-                health : 2,
-                healthMax :2,
-                name : "monster"
+            monster: {
+                level: 1,
+                health: 2,
+                healthMax: 2,
+                name: "monster"
             },
-            shop:{
-              items : [
-                  {
-                      name: "Doigt",//Un clic supplémentaire par doigt,
-                      price: 1,
-                      type :"equipement"
-                  },
-                  {
-                      name: "Bras Mécanique",//Structure de base
-                      price: 10,
-                      type :"equipement"
-                  },
-                  {
-                      name: "",//
-                      price: 100,
-                      type :"equipement"
-                  }
-              ]
+            shop: {
+                items: [
+                    {
+                        name: "Doigt",//Un clic supplémentaire par doigt,
+                        price: 1,
+                        type: "equipement"
+                    },
+                    {
+                        name: "Bras Mécanique",//Structure de base
+                        price: 10,
+                        type: "equipement"
+                    },
+                    {
+                        name: "",//
+                        price: 100,
+                        type: "equipement"
+                    }
+                ]
             },
-            action : {}
+            action: {}
         };
 
         this.actionStream = new Subject();
@@ -62,8 +73,9 @@ export class Store {
         });
     }
 
-    startup(prev, action){
-        action.storage.initOrGet("state", JSON.stringify(action.initState)).subscribe(state => action.initState = JSON.parse(state));
+    startup(prev, action) {
+        action.storage.initOrGet("state", JSON.stringify(action.initState)).subscribe(state =>
+            action.initState = JSON.parse(state));
         prev = action.initState;
     }
 

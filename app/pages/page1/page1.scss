@@ -3,8 +3,13 @@
 }
 
 #clicBtn {
-  $size: 200px;
+  $size: 150px;
   width: $size;
   height: $size;
   border-radius: $size/2;
+}
+
+ion-col {
+  display: flex;
+  justify-content: space-around;
 }
