@@ -102,8 +102,7 @@ export class Store {
                 console.log("CURRENT : ", next);
                 return next;
             }, this.initState)
-            .delay(1)
-            .share();
+            .publishReplay(1).refCount()
 
         this.storage.initOrGet("state", JSON.stringify(this.initState)).map(state => JSON.parse(state)).subscribe(state => {
             this.actionStream.next({type: 'STARTUP', state: state});
