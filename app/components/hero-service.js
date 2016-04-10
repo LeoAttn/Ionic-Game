@@ -44,28 +44,49 @@ export class HeroService {
 
     }
 
+    findAndRemove(array, property, value) {
+        array.forEach(function (result, index) {
+            if (result[property] === value) {
+                //Remove from array
+                return array.splice(index, 1);
+            }
+        });
+    }
+
     SelectedSpell(prev, action) {
-        console.log(prev.hero);
-        var spellsOfHero = prev.hero.inventory.spells;
-        console.log(typeof (prev.hero.inventory.spells));
-        if(spellsOfHero.length == 5){
-            return false
-        }
+
+        var newState = _.merge(prev,{});
+        console.log(newState);
+        var spellsOfHero = newState.hero.inventory.spells;
+        var spellsInState = newState.shop.spells;
+        console.log(spellsInState);
+
         spellsOfHero.forEach(function (spell) {
             if (spell.name == action.spell.name) {
                 return false
             }
         });
-        var result = _.concat(spellsOfHero, action.spell)
-        console.log(action.spell)
-        console.log(result)
-        return _.merge(prev, {
+        var result = _.concat(spellsOfHero, action.spell);
+
+        var index=0;
+        spellsInState.forEach(function (spell, i) {
+            if (spell.name == action.spell.name) {
+                index = i-1
+            }
+        });
+
+
+        return _.merge(newState, {
             hero: {
                 inventory: {
                     spells: result
                 }
+            },
+            shop: {
+                spells: spellsInState.splice(index, 1)
             }
         })
+
 
     }
 
