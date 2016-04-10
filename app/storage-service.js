@@ -37,10 +37,9 @@ export class StorageService {
     }
 
     initOrGet(key, defaultValue) {
-        var stream = this.get(key);
-        stream = stream
-            .map(val => val ? val : defaultValue)
-        stream.subscribe(val=> this.set(key, val));
+        var stream = this.get(key)
+            .map(val => val ? val : defaultValue);
+        stream.subscribe(val=> {console.log("Loading ",key,':',val); this.set(key, val)});
         return stream;
     }
 

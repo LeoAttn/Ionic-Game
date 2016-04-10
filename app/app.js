@@ -4,6 +4,7 @@ import {TabsPage} from './pages/tabs/tabs';
 import {StorageService} from './storage-service';
 import {HeroService} from './components/hero-service';
 import {ShopService} from './components/shop-service';
+import {SpellService} from './components/spellService';
 import {Store} from './store';
 
 @App({
@@ -11,6 +12,7 @@ import {Store} from './store';
         Store,
         ShopService,
         StorageService,
+        SpellService,
         HeroService
     ],
     template: '<ion-nav [root]="rootPage"></ion-nav>',

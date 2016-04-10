@@ -47,24 +47,84 @@ export class Store {
                   }
               ]
             },
+            spells : [
+                {
+                    name: 'X2',
+                    description: "attaque X2 pendant 30sec",
+                    effects: 2,
+                    price: 1000,
+                    cooldown: 600, //secondes
+                    timeEffect: 30,
+                    status: "Acheter"
+                },
+
+                {
+                    name: 'fireball',
+                    description: "inflige 1000 X lvl à l'ennemi",
+                    effects: [],
+                    price: 10000,
+                    cooldown: 1800, //secondes
+                    status: "Acheter"
+                },
+
+                {
+                    name: 'Warrior soul',
+                    description: "dps des armes X 3 pendant 1min",
+                    effects: [],
+                    price: 100000,
+                    cooldown: 3600, //seconde
+                    timeEffect: 60,
+                    status: "Acheter"
+                },
+
+                {
+                    name: "Punch of King",
+                    description: " inflige attaque X lvl",
+                    effects: 1,
+                    price: 1000000,
+                    cooldown: 1200, // secondes
+                    status: "Acheter"
+                },
+
+                {
+                    name: "Zeus roar",
+                    description: "divise la vie de l'ennemi par le lvl actuel",
+                    effect: [],
+                    price: 10000000,
+                    cooldown: 86400, //secondes
+                    status: "Acheter"
+                }
+            ],
             action : {}
         };
 
         this.actionStream = new Subject();
+
+        this.addRoute('INITSTATE', this.startup);
         this.state = this.actionStream
-            .startWith({type: 'STARTUP'})
+            .startWith({type: 'STARTUP', storage :this.storage})
             .scan((prevState, action) => {
-                return this.router.route(prevState, action);
-            }, this.initState);
+                console.log("ACTION : ", action);
+                console.log("PREVIOUS STATE : ",prevState);
+                var currState = this.router.route(prevState, action);
+                console.log("CURRENT STATE : ", currState);
+                return currState;
+            }, this.initState).share();
+
+        this.storage.initOrGet("state", JSON.stringify(this.initState)).map(state => JSON.parse(state)).subscribe(s =>{
+            this.actionStream.next({type : 'INITSTATE', state: s})
+        });
+            //storage.get("state").map(state =>JSON.parse(state)).merge(this.stateStream);
+
+        ///Save State in local Storage
         this.state.map(state=>JSON.stringify(state)).subscribe(state => {
             storage.set("state", state);
-            console.log("Current State : ", state)
         });
     }
 
     startup(prev, action){
-        action.storage.initOrGet("state", JSON.stringify(action.initState)).subscribe(state => action.initState = JSON.parse(state));
-        prev = action.initState;
+        console.log(action.state);
+        return action.state;
     }
 
     dispatch(action) {

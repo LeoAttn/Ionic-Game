@@ -3,7 +3,6 @@
  */
 import {IONIC_DIRECTIVES, Modal,Alert, NavController} from 'ionic-angular'
 import {Component, Input} from 'angular2/core'
-import {Buyable} from '../page2/buyable'
 import {SpellModal} from './spell-modal'
 
 @Component({
@@ -16,7 +15,7 @@ import {SpellModal} from './spell-modal'
          <button class="button button-dark" (click)=showModal(spell)>Info</button>
       </ion-card-content>
   `,
-    directives: [Buyable,IONIC_DIRECTIVES]
+    directives: [IONIC_DIRECTIVES]
 })
 
 export class SpellComponent {
