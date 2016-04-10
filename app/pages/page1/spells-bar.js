@@ -28,6 +28,6 @@ export class SpellsBar {
 
     spellActive(spell) {
         this.hero.dispatch({type: "ACTIVE_SPELL", spell: spell});//ACTIVE A SPELL
-        window.setTimeout(this.hero.dispatch({type: "DISABLE_SPELL", spell: spell}), 3000);//ACTIVE A SPELL
+        // window.setTimeout(this.hero.dispatch({type: "DISABLE_SPELL", spell: spell}), 3000);//ACTIVE A SPELL
     };
 }

@@ -58,7 +58,7 @@ export class Store {
                     },
 
                     {
-                        name: 'fireball',
+                        name: 'Fireball',
                         description: "inflige 1000 X lvl à l'ennemi",
                         price: 10000,
                         cooldown: 1800 //secondes

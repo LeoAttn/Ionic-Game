@@ -24,21 +24,7 @@ export class HeroService {
 
     attack(prev, action) {
         if (prev.monster.health - prev.hero.attack <= 0) {
-            let level = _.add(prev.hero.level, 1);
-            let health = Math.round(2 + Math.pow(1.4, prev.hero.level));
-            let money = _.add(prev.hero.money, Math.round(Math.pow(1.2, prev.hero.level)));
-            console.log(money);
-            return _.merge(prev, {
-                hero: {
-                    level: level,
-                    money: money
-                },
-                monster: {
-                    level: level,
-                    health: health,
-                    healthMax: health
-                }
-            });
+            return HeroService.levelupHero(prev);
         }
         else {
             return _.merge(prev, {
@@ -51,26 +37,65 @@ export class HeroService {
     };
 
     activeSpell(prev, action) {
-        let attack = prev.hero.attack * 2;
+        // let attack = prev.hero.attack * 2;
+        let merge;
+        switch (action.spell.name) {
+            case 'Fireball':
+                let date = new Date();
+                // date.add(action.spell.cooldown).second();
+                merge = _.merge(prev, {
+                    hero: {
+                        inventory: {
+                            spells: [
+                                {
+                                    name: 'Fireball',
+                                    endOfCooldown: date
+                                }
+                            ]
+                        }
+                    },
+                    monster: {
+                        health: prev.monster.health - Math.round(1000 * Math.pow(1.2, prev.hero.level))
+                    }
+                });
+                break;
+            case 'Punch of King':
+                merge = _.merge(prev, {
+                    monster: {
+                        health: prev.monster.health - Math.round(prev.hero.attack * Math.pow(1.2, prev.hero.level))
+                    }
+                });
+                break;
+            case 'Zeus roar':
+                merge = _.merge(prev, {
+                    monster: {
+                        health: Math.round(prev.monster.health / prev.hero.level)
+                    }
+                });
+                break;
+            default:
+                merge = prev;
+                console.log('Spell no exist !');
+                break;
+        }
 
-        return _.merge(prev, {
-            hero: {
-                attack: attack
-            }
-        });
+        if (merge.monster.health <= 0) {
+            return HeroService.levelupHero(merge);
+        }
+        return merge
     };
 
     disableSpell(prev, action) {
-        console.log("FIIIN");
-        let attack = prev.hero.attack / 2;
-
-        return _.merge(prev, {
-            hero: {
-                attack: attack
-            }
-        });
+        // console.log("FIIIN");
+        // let attack = prev.hero.attack / 2;
+        //
+        // return _.merge(prev, {
+        //     hero: {
+        //         attack: attack
+        //     }
+        // });
     };
-
+    
     findAndRemove(array, property, value) {
         array.forEach(function (result, index) {
             if (result[property] === value) {
@@ -113,9 +138,22 @@ export class HeroService {
                 spells: spellsInState
             }
         })
-
-
-
     }
 
+    static levelupHero(prev) {
+        let level = _.add(prev.hero.level, 1);
+        let health = Math.round(2 + Math.pow(1.4, prev.hero.level));
+        let money = _.add(prev.hero.money, Math.round(Math.pow(1.2, prev.hero.level)));
+        return _.merge(prev, {
+            hero: {
+                level: level,
+                money: money
+            },
+            monster: {
+                level: level,
+                health: health,
+                healthMax: health
+            }
+        });
+    };
 }
