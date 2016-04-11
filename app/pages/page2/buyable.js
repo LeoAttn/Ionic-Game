@@ -26,6 +26,6 @@ export class Buyable {
     }
 
     buy(){
-        this.shopService.dispatch({type: 'BUY_ITEM', item : this.item});
+        this.shopService.dispatch({type: 'BUY', item : this.item});
     }
 }

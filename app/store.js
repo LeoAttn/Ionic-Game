@@ -20,8 +20,18 @@ export class Store {
                 money: 1000000000,
                 name: "Noki",
                 inventory: {
-                    spells: [],
-                    equipement: []
+                    arms : [
+                        {
+                            name : "Bras",
+                            free: true
+                        },
+                        {
+                            name : "Bras",
+                            free: true
+                        }
+                    ],
+                    equipements : [],
+                    spells: []
                 }
             },
             monster: {
@@ -31,14 +41,27 @@ export class Store {
                 name: "monster"
             },
             shop: {
-                items: [
+                arms: [
                     {
-                        name: "Bras Mécanique",//Structure de base
-                        price: 10
+                        name: "Bras Organique",//Structure de base
+                        price: 100,
+                        clickUp : 15,
+                        dpsUp : 0
                     },
                     {
-                        name: "",
-                        price: 100
+                        name: "Bras Mécanique",//Structure de base
+                        price: 100000,
+                        clickUp : 0,
+                        dpsUp : 100
+                    }
+                ],
+                equipement : [
+                    {
+                        name: "Epée du turfu",
+                        armRequired : 1, //Number of Arm required to equip this
+                        price: 100, // Price of this item
+                        dpsUp : 2, // Amount of dps added
+                        clickUp : 0 //Amount of click damage added
                     }
                 ],
                 spells: [
@@ -89,17 +112,17 @@ export class Store {
         };
 
         this.actionStream = new Subject();
-
         this.addRoute('STARTUP', this.startup);
         this.state = this.actionStream
             .scan((prevState, action) => {
+                console.log("ACTION : ", action);
                 var next = this.router.route(prevState, action);
                 return next;
             }, this.initState)
             .publishReplay(1).refCount();
 
 //this.storage.remove("state");
-        
+
         this.storage.initOrGet("state", JSON.stringify(this.initState)).map(state => JSON.parse(state)).subscribe(state => {
             state.hero.clickMultiplicator = 1;
             this.actionStream.next({type: 'STARTUP', state: state});

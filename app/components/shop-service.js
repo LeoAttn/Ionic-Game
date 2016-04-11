@@ -13,10 +13,12 @@ export class ShopService {
     constructor(store:Store) {
         this.store = store;
         this.shop = this.store.state.map(state => state.shop);
+        this.armsFree = this.store.state.map(state => state.hero.inventory.arms).filter(item => item.free).count();
 
-        this.items = [];
-        this.shop.subscribe(shop => this.items = shop.items);
+        this.arms = this.store.state.map(state => state.shop.arms);
+        this.equipements = this.store.state.map(state => state.shop.equipement);
 
+        this.store.addRoute("BUY_ARM", this.buyArm);
         this.store.addRoute("BUY_ITEM", this.buyItem);
         this.store.addRoute("BUY_SPELL", this.buySpell);
     }
@@ -25,16 +27,49 @@ export class ShopService {
         this.store.dispatch(action);
     }
 
-    buyItem(prev, action) {
+    buyArm(prev, action) {
         if (prev.hero.money >= action.item.price) {
             return _.merge(prev, {
                 hero: {
                     money: prev.hero.money - action.item.price,
-                    clickDamage : prev.hero.clickDamage +1, //action.item.clickUp,
-                    dps : prev.hero.dps + 1,//action.item.dpsUp,
-                    inventory: _.merge(prev.hero.inventory, _.concat(prev.hero.inventory[action.item.type], action.item))
+                    clickDamage: prev.hero.clickDamage + action.item.clickUp,
+                    dps: prev.hero.clickDamage + action.item.dps,
+                    inventory: {
+                        arms: _.concat(prev.hero.inventory.arms, {name: action.item.name, free: true})
+                    }
                 }
-            });
+            })
+        }
+    }
+
+    buyItem(prev, action) {
+        if (prev.hero.money >= action.item.price) {
+            var freeArms = _.filter(prev.hero.inventory.arms, {free: true});
+            if (freeArms && freeArms.count >= action.item.armRequired) {
+                var i = 0;
+                var arms = prev.hero.inventory.arms;
+                arms.foreach(function(arm){
+                    if(arm.free && i != action.item.armRequired){
+                        arm.free = false;
+                        i++;
+                    }
+                });
+
+                return _.merge(prev, {
+                    hero: {
+                        money: prev.hero.money - action.item.price,
+                        clickDamage: prev.hero.clickDamage + action.item.clickUp,
+                        dps: prev.hero.dps + action.item.dpsUp,
+                        inventory: {
+                            arms : arms,
+                            equipement: _.concat(prev.hero.inventory.equipement, action.item)
+                        }
+                    }
+                });
+            }
+            else {
+                action.error = "Not Enough Arms";
+            }
         }
         else {
             action.error = "Not Enough Money";
@@ -71,8 +106,8 @@ export class ShopService {
             return prev;
         }
 
-        }
-
-
     }
+
+
+}
 
