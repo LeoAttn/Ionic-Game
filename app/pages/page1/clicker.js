@@ -1,7 +1,7 @@
-import {Component} from 'angular2/core'
-import {IONIC_DIRECTIVES} from 'ionic-angular'
-import {Subject, Observable} from 'rxjs'
-import {HeroService} from '../../components/hero-service'
+import {Component} from 'angular2/core';
+import {IONIC_DIRECTIVES} from 'ionic-angular';
+import {Subject, Observable} from 'rxjs';
+import {HeroService} from '../../components/hero-service';
 import {Store} from './../../store';
 
 
