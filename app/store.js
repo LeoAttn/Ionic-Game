@@ -102,6 +102,7 @@ export class Store {
         
         this.storage.initOrGet("state", JSON.stringify(this.initState)).map(state => JSON.parse(state)).subscribe(state => {
             state.hero.clickMultiplicator = 1;
+            state.hero.dpsMultiplicator = 1;
             this.actionStream.next({type: 'STARTUP', state: state});
             setInterval(()=>{this.actionStream.next({type : 'DPS'})}, 1000)
         });

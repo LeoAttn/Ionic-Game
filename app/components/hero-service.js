@@ -25,13 +25,24 @@ export class HeroService {
     };
 
     dps(prev, action){
-        if(prev.monster.health - prev.hero.dps <=0){
+        prev.hero.inventory.spells.forEach(function (spell, i) {
+            if (spell.isCooldown && spell.endOfCooldown < Date.now()) {
+                console.log("END OF COOLDOWN FOR " + spell.name);
+                let clone = {hero: {inventory: {spells: [] }}};
+                clone.hero.inventory.spells[i] = _.merge(prev.hero.inventory.spells[i], {
+                    isCooldown: false
+                });
+                prev = _.merge(prev, clone);
+            }
+        });
+
+        if(prev.monster.health - prev.hero.dps * prev.hero.dpsMultiplicator <=0){
             return HeroService.levelupHero(prev);
         }
         else{
             return _.merge(prev, {
                 monster: {
-                    health: prev.monster.health - prev.hero.dps
+                    health: prev.monster.health - prev.hero.dps * prev.hero.dpsMultiplicator
                 }
             })
         }
@@ -73,23 +84,34 @@ export class HeroService {
             }
         });
 
-        let interval = setInterval(() => {
-            if (date < Date.now()) {
-                console.log("END OF COOLDOWN FOR " + action.spell.name);
-                clearInterval(interval);
-                let clone = {hero: {inventory: {spells: [] }}};
-                clone.hero.inventory.spells[index] = _.merge(prev.hero.inventory.spells[index], {
-                    isCooldown: false
-                });
-                HeroService.storeStatic.dispatch({type: "UPDATE_SPELL", state: clone});
-            }
-        }, 1000);
+        // let interval = setInterval(() => {
+        //     if (date < Date.now()) {
+        //         console.log("END OF COOLDOWN FOR " + action.spell.name);
+        //         clearInterval(interval);
+        //         let clone = {hero: {inventory: {spells: [] }}};
+        //         clone.hero.inventory.spells[index] = _.merge(prev.hero.inventory.spells[index], {
+        //             isCooldown: false
+        //         });
+        //         HeroService.storeStatic.dispatch({type: "UPDATE_SPELL", state: clone});
+        //     }
+        // }, 1000);
 
         switch (action.spell.name) {
             case 'X2':
                 prev = _.merge(prev, {
                     hero: {
                         clickMultiplicator: prev.hero.clickMultiplicator * 2
+                    }
+                });
+                setTimeout(() => {
+                    console.log("END OF EFFECT FOR " + action.spell.name);
+                    HeroService.storeStatic.dispatch({type: "DISABLE_SPELL", spell: action.spell});
+                }, prev.hero.inventory.spells[index].timeEffect * 1000);
+                break;
+            case 'Warrior soul':
+                prev = _.merge(prev, {
+                    hero: {
+                        dpsMultiplicator: prev.hero.dpsMultiplicator * 3
                     }
                 });
                 setTimeout(() => {
@@ -139,6 +161,12 @@ export class HeroService {
             clone = {
                 hero: {
                     clickMultiplicator: prev.hero.clickMultiplicator / 2
+                }
+            };
+        } else if (action.spell.name == 'Warrior soul') {
+            clone = {
+                hero: {
+                    dpsMultiplicator: prev.hero.dpsMultiplicator / 3
                 }
             };
         }
