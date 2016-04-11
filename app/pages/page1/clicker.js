@@ -1,17 +1,23 @@
-import {Component} from 'angular2/core'
-import {IONIC_DIRECTIVES} from 'ionic-angular'
-import {Subject, Observable} from 'rxjs'
-import {HeroService} from '../../components/hero-service'
+import {Component} from 'angular2/core';
+import {IONIC_DIRECTIVES} from 'ionic-angular';
+import {Subject, Observable} from 'rxjs';
+import {HeroService} from '../../components/hero-service';
 import {Store} from './../../store';
 
 
 @Component({
     selector: 'clicker',
     template: `
-        <h2>Level : {{levelStream | async}}</h2>
+        <h3>Level : {{levelStream | async}}</h3>
         <div>
-            <h2>Health : {{healthStream | async}} / {{healthMaxStream | async}}</h2>
-            <progress max="{{healthMaxStream | async}}" value="{{healthStream | async}}"></progress> 
+            <h4>Damages: {{damagesStream | async}}</h4>
+        </div>
+        <div>
+            <h4>DPS: {{dmgSecStream | async}}</h4>
+        </div>        
+        <div>
+            <h4>Health : {{healthStream | async}} / {{healthMaxStream | async}}</h4>
+            <progress  class="progress-bar" max="{{healthMaxStream | async}}" value="{{healthStream | async}}"></progress> 
         </div>
         <button round large (click)="clickBtn()" id="clicBtn">OUTCH</button>
     `,
@@ -21,7 +27,9 @@ export class Clicker {
     constructor(store:Store, hero:HeroService) {
         this.hero = hero;
         this.store = store;
-        this.levelStream = this.store.state.map(state => state.monster.level);
+        this.levelStream = this.store.state.map(state => state.hero.level);
+        this.damagesStream = this.store.state.map(state => state.hero.clickDamage);
+        this.dmgSecStream = this.store.state.map(state => state.hero.dps);
         this.healthStream = this.store.state.map(state => state.monster.health);
         this.healthMaxStream = this.store.state.map(state => state.monster.healthMax);
 

@@ -3,10 +3,14 @@
 }
 
 #clicBtn {
-  $size: 150px;
-  width: $size;
-  height: $size;
+  $size: 50px;
+  padding: $size;
+  width: 100%;
   border-radius: $size/2;
+}
+
+.progress-bar {
+  width: 100%;
 }
 
 ion-col {
