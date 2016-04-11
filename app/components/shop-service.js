@@ -25,15 +25,16 @@ export class ShopService {
     }
 
     buyItem(prev, action) {
+
         if (prev.hero.money >= action.item.price) {
             return R.merge(prev, {
                 hero: {
                     money: prev.hero.money - action.item.price,
                     inventory: {
                         equipement: R.append(action.item, prev.hero.inventory)
+                    }
                 }
-            }
-        });
+            });
 
         }
         else {
@@ -42,7 +43,8 @@ export class ShopService {
         }
     }
 
-    buySpell(prev, action){
+    buySpell(prev, actions) {
+
 
         if (prev.hero.money >= action.item.price) {
             return R.merge(prev, {
@@ -56,8 +58,8 @@ export class ShopService {
             return prev;
         }
 
+        }
+
+
     }
-
-
-}
 

@@ -112,13 +112,12 @@ export class HeroService {
         });
     }
 
-    SelectedSpell(prev, action) {
-
+    SelectedSpell(prev, actions) {
+        var action = actions.spellComponent;
+        var status = actions.spellComponent.status;
         var newState = _.merge(prev, {});
         console.log(newState);
         var spellsOfHero = newState.hero.inventory.spells;
-        var spellsInState = newState.shop.spells;
-        console.log(spellsInState);
 
         spellsOfHero.forEach(function (spell) {
             if (spell.name == action.spell.name) {
@@ -127,21 +126,29 @@ export class HeroService {
         });
         var result = _.concat(spellsOfHero, action.spell);
 
-        spellsInState.forEach(function (spell, i) {
-            if (spell.name == action.spell.name) {
-                spellsInState.splice(i, 1);
-            }
-        });
-        return _.merge(newState, {
-            hero: {
-                inventory: {
-                    spells: result
+        if(status == "Equiper"){
+            return _.merge(newState, {
+                hero: {
+                    inventory: {
+                        spells: result
+                    }
                 }
-            },
-            shop: {
-                spells: spellsInState
-            }
-        })
+            })
+
+        }else{
+            spellsOfHero.forEach(function (spell, i) {
+                if (spell.name == action.spell.name) {
+                    spellsOfHero.splice(i, 1);
+                }
+            });
+            return _.merge(newState, {
+                hero: {
+                    inventory: {
+                        spells: spellsOfHero
+                    }
+                }
+            })
+        }
 
     }
 
