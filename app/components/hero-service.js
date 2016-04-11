@@ -54,10 +54,6 @@ export class HeroService {
 
     };
 
-    updateSpell(prev, action) {
-        return _.merge(prev, action.state);
-    }
-
     activeSpell(prev, action) {
         if (action.spell.endOfCooldown > Date.now()) {
             let diff = (action.spell.endOfCooldown - Date.now()) / 1000;
@@ -93,6 +89,17 @@ export class HeroService {
         }, 1000);
 
         switch (action.spell.name) {
+            case 'X2':
+                prev = _.merge(prev, {
+                    hero: {
+                        clickMultiplicator: prev.hero.clickMultiplicator * 2
+                    }
+                });
+                setTimeout(() => {
+                    console.log("END OF EFFECT FOR " + action.spell.name);
+                    HeroService.storeStatic.dispatch({type: "DISABLE_SPELL", spell: action.spell});
+                }, prev.hero.inventory.spells[index].timeEffect * 1000);
+                break;
             case 'Fireball':
                 prev = _.merge(prev, {
                     monster: {
@@ -125,15 +132,20 @@ export class HeroService {
         return prev
     };
 
+    updateSpell(prev, action) {
+        return _.merge(prev, action.state);
+    }
+
     disableSpell(prev, action) {
-        // console.log("FIIIN");
-        // let attack = prev.hero.attack / 2;
-        //
-        // return _.merge(prev, {
-        //     hero: {
-        //         attack: attack
-        //     }
-        // });
+        var clone = {};
+        if (action.spell.name == 'X2') {
+            clone = {
+                hero: {
+                    clickMultiplicator: prev.hero.clickMultiplicator / 2
+                }
+            };
+        }
+        return _.merge(prev, clone);
     };
 
     findAndRemove(array, property, value) {

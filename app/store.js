@@ -93,7 +93,10 @@ export class Store {
             }, this.initState)
             .publishReplay(1).refCount();
 
+//this.storage.remove("state");
+        
         this.storage.initOrGet("state", JSON.stringify(this.initState)).map(state => JSON.parse(state)).subscribe(state => {
+            state.hero.clickMultiplicator = 1;
             this.actionStream.next({type: 'STARTUP', state: state});
             setInterval(()=>{this.actionStream.next({type : 'DPS'})}, 1000)
         });
