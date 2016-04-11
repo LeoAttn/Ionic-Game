@@ -17,7 +17,7 @@ export class Store {
                 level: 1,
                 clickDamage: 1,
                 dps : 0,
-                money: 10000,
+                money: 1000000000,
                 name: "Noki",
                 inventory: {
                     spells: [],
@@ -47,14 +47,16 @@ export class Store {
                         description: "attaque X2 pendant 30sec",
                         price: 1000,
                         cooldown: 600, //secondes
-                        timeEffect: 30
+                        timeEffect: 30,
+                        status: "Acheter"
                     },
 
                     {
                         name: 'Fireball',
                         description: "inflige 1000 X lvl à l'ennemi",
                         price: 10000,
-                        cooldown: 1800 //secondes
+                        cooldown: 1800 ,
+                        status: "Acheter"
                     },
 
                     {
@@ -62,21 +64,24 @@ export class Store {
                         description: "dps des armes X 3 pendant 1min",
                         price: 100000,
                         cooldown: 3600, //seconde
-                        timeEffect: 60
+                        timeEffect: 60,
+                        status: "Acheter"
                     },
 
                     {
                         name: "Punch of King",
                         description: " inflige attaque X lvl",
                         price: 1000000,
-                        cooldown: 1200 // secondes
+                        cooldown: 1200,
+                        status: "Acheter"
                     },
 
                     {
                         name: "Zeus roar",
                         description: "divise la vie de l'ennemi par le lvl actuel",
                         price: 10000000,
-                        cooldown: 86400 //secondes
+                        cooldown: 86400,
+                        status: "Acheter"
                     }
                 ]
             },

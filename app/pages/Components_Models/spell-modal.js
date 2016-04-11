@@ -2,6 +2,7 @@ import {Page, NavParams, ViewController} from 'ionic-angular'
 import {HeroService} from '../../components/hero-service'
 import {ShopService} from './../../components/shop-service';
 import {Store} from '../../store'
+import {Observable} from 'rxjs'
 
 @Page({
     template: `
@@ -37,20 +38,34 @@ import {Store} from '../../store'
 })
 export class SpellModal {
 
-    constructor(params:NavParams, viewCtrl:ViewController, heroService: HeroService, shopService:ShopService, store:Store) {
+    constructor(params:NavParams, viewCtrl:ViewController, heroService:HeroService, shopService:ShopService, store:Store) {
         this.spell = params.get('spell');
         this.view = viewCtrl;
         this.hero = heroService;
         this.shop = shopService;
-        this.store = store
+        this.store = store;
+        this.error = this.store.state.map(state => state.action);
     }
 
     actionOnSpell() {
-        this.shop.dispatch({type : 'BUY_SPELL', item: this.spell});
-        this.hero.dispatch({type: 'SELECTED_SPELL', spell: this.spell});
-        this.dismiss()
-    }
 
+        this.shop.dispatch({type: 'BUY_SPELL', item: this.spell});
+
+        /*this.error = Observable.from(this.error);
+        //console.log(error);
+
+        this.error.subscribe(result =>{
+            if (result.error == false) {
+                this.hero.dispatch({type: 'SELECTED_SPELL', spell: this.spell});
+                this.dismiss();
+            }
+        })*/
+
+        this.hero.dispatch({type: 'SELECTED_SPELL', spell: this.spell});
+        this.dismiss();
+
+
+    }
 
     dismiss() {
         this.view.dismiss();

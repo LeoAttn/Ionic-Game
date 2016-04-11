@@ -1,6 +1,3 @@
-/**
- * Created by bluedragonfly on 3/31/16.
- */
 import {Injectable} from 'angular2/core'
 import {Observable} from 'rxjs'
 import {Store} from './../store'
@@ -157,39 +154,63 @@ export class HeroService {
         });
     }
 
-    SelectedSpell(prev, action) {
-
+    SelectedSpell(prev, actions) {
+        var action = actions.spellComponent;
+        var status = actions.spellComponent.status;
         var newState = _.merge(prev, {});
-        console.log(newState);
         var spellsOfHero = newState.hero.inventory.spells;
-        var spellsInState = newState.shop.spells;
-        console.log(spellsInState);
+        var spellsInShop = newState.shop.spells;
 
-        spellsOfHero.forEach(function (spell) {
-            if (spell.name == action.spell.name) {
-                return false
-            }
-        });
-        var result = _.concat(spellsOfHero, action.spell);
-
-        spellsInState.forEach(function (spell, i) {
-
-            if (spell.name == action.spell.name) {
-                console.log(spell.name + " " + action.spell.name);
-                spellsInState.splice(i, 1);
-            }
-        });
-
-        return _.merge(newState, {
-            hero: {
-                inventory: {
-                    spells: result
+        if(status == "Equiper"){
+            spellsOfHero.forEach(function (spell) {
+                if (spell.name == action.spell.name) {
+                    return false
                 }
-            },
-            shop: {
-                spells: spellsInState
-            }
-        })
+            });
+            var spellCopy = _.merge(action.spell,{});
+            spellsInShop.forEach(function (spell,i) {
+                if (spell.name == action.spell.name) {
+                    spellsInShop[i].status = "Retirer";
+                    spellCopy.status = "Retirer";
+                }
+            });
+            return _.merge(newState, {
+                hero: {
+                    inventory: {
+                        spells: _.concat(spellsOfHero, spellCopy)
+                    }
+                },
+                shop:{
+                    spells: spellsInShop
+                }
+
+            })
+        }
+        if(status == "Retirer"){
+            spellsOfHero.forEach(function (spell, i) {
+                if (spell.name == action.spell.name) {
+                    spellsOfHero.splice(i, 1);
+                    spellsInShop.forEach(function(spell, i){
+                        if (spell.name == action.spell.name){
+                            spellsInShop[i].status = "Equiper";
+
+                        }
+                    });
+
+                }
+            });
+            return _.merge(newState, {
+                hero: {
+                    inventory: {
+                        spells: spellsOfHero
+                    }
+                },
+                shop:{
+                    spells: spellsInShop
+                }
+            })
+
+        }
     }
 
     static levelupHero(prev) {
