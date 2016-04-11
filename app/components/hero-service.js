@@ -38,13 +38,13 @@ export class HeroService {
     }
 
     attack(prev, action) {
-        if (prev.monster.health - prev.hero.clickDamage <= 0) {
+        if (prev.monster.health - prev.hero.clickDamage * prev.hero.clickMultiplicator <= 0) {
             return HeroService.levelupHero(prev);
         }
         else {
             return _.merge(prev, {
                 monster: {
-                    health: prev.monster.health - prev.hero.clickDamage
+                    health: prev.monster.health - prev.hero.clickDamage * prev.hero.clickMultiplicator
                 }
             })
         }
