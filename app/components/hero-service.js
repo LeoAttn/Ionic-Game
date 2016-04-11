@@ -34,52 +34,62 @@ export class HeroService {
     };
 
     activeSpell(prev, action) {
-        // let attack = prev.hero.attack * 2;
-        let merge;
+        if (action.spell.endOfCooldown > Date.now()) {
+            let diff = (action.spell.endOfCooldown - Date.now()) / 1000;
+            console.log("COOLDOWN FOR " + action.spell.name + " : " + diff + "s");
+            return prev;
+        }
+
+        let date = new Date();
+        date = date.setSeconds(date.getSeconds() + action.spell.cooldown/10);
+        prev.hero.inventory.spells.forEach(function (spell, i) {
+            if (spell.name == action.spell.name) {
+                let clone = JSON.parse(JSON.stringify(prev));
+                clone.hero.inventory.spells[i] = _.merge(prev.hero.inventory.spells[i], {
+                    endOfCooldown: date
+                });
+                prev = _.merge(prev, clone);
+            }
+        });
+
+        let interval = setInterval(() => {
+            if (date < Date.now()) {
+                console.log("END OF COOLDOWN FOR " + action.spell.name);
+                clearInterval(interval);
+            }
+        }, 1000);
+
         switch (action.spell.name) {
             case 'Fireball':
-                let date = new Date();
-                // date.add(action.spell.cooldown).second();
-                merge = _.merge(prev, {
-                    hero: {
-                        inventory: {
-                            spells: [
-                                {
-                                    name: 'Fireball',
-                                    endOfCooldown: date
-                                }
-                            ]
-                        }
-                    },
+                prev = _.merge(prev, {
                     monster: {
                         health: prev.monster.health - Math.round(1000 * Math.pow(1.2, prev.hero.level))
                     }
                 });
                 break;
             case 'Punch of King':
-                merge = _.merge(prev, {
+                prev = _.merge(prev, {
                     monster: {
                         health: prev.monster.health - Math.round(prev.hero.attack * Math.pow(1.2, prev.hero.level))
                     }
                 });
                 break;
             case 'Zeus roar':
-                merge = _.merge(prev, {
+                prev = _.merge(prev, {
                     monster: {
                         health: Math.round(prev.monster.health / prev.hero.level)
                     }
                 });
                 break;
             default:
-                merge = prev;
                 console.log('Spell no exist !');
                 break;
         }
 
-        if (merge.monster.health <= 0) {
-            return HeroService.levelupHero(merge);
-        }
-        return merge
+        if (prev.monster.health <= 0)
+            return HeroService.levelupHero(prev);
+
+        return prev
     };
 
     disableSpell(prev, action) {

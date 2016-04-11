@@ -6,6 +6,7 @@ import {Observable} from 'rxjs'
 import {Store} from './../store'
 import * as R from 'lodash/fp'
 
+
 @Injectable()
 export class ShopService {
     constructor(store:Store) {
@@ -51,11 +52,8 @@ export class ShopService {
             });
         }
         else {
-            return R.merge(prev,{
-               action:{
-                   error: true
-               }
-            });
+            action.error = "Not Enough Money";
+            return prev;
         }
 
     }
