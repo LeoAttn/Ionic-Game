@@ -11,7 +11,12 @@ import {Store} from './../../store';
         <h3>Spells</h3>
         <ion-row>
             <ion-col width-20 *ngFor="#spell of spellsJSON">
-                <button secondary outline (click)="spellActive(spell)">{{spell.name}}</button>
+                <div *ngIf="spell.isCooldown">
+                    <button danger outline (click)="spellActive(spell)">{{spell.name}}</button>
+                </div>
+                <div *ngIf="!spell.isCooldown">
+                    <button secondary outline (click)="spellActive(spell)">{{spell.name}}</button>
+                </div>
             </ion-col>
         </ion-row>
     `,

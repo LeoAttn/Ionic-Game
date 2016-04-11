@@ -44,14 +44,17 @@ export class HeroService {
         }
 
         let date = new Date();
-        date = date.setSeconds(date.getSeconds() + action.spell.cooldown/10);
+        let index = -1;
+        date = date.setSeconds(date.getSeconds() + action.spell.cooldown/100);
         prev.hero.inventory.spells.forEach(function (spell, i) {
             if (spell.name == action.spell.name) {
                 let clone = JSON.parse(JSON.stringify(prev));
                 clone.hero.inventory.spells[i] = _.merge(prev.hero.inventory.spells[i], {
-                    endOfCooldown: date
+                    endOfCooldown: date,
+                    isCooldown: true
                 });
                 prev = _.merge(prev, clone);
+                index = i;
             }
         });
 
@@ -59,6 +62,11 @@ export class HeroService {
             if (date < Date.now()) {
                 console.log("END OF COOLDOWN FOR " + action.spell.name);
                 clearInterval(interval);
+                let clone = JSON.parse(JSON.stringify(prev));
+                clone.hero.inventory.spells[index] = _.merge(prev.hero.inventory.spells[index], {
+                    isCooldown: false
+                });
+                return prev = _.merge(prev, clone);
             }
         }, 1000);
 
