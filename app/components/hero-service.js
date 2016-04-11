@@ -7,11 +7,15 @@ import {Store} from './../store'
 import * as _ from 'lodash/fp'
 @Injectable()
 export class HeroService {
+    static storeStatic;
+
     constructor(store:Store) {
         this.store = store;
         this.hero = this.store.state.map(state => state.hero);
+        HeroService.storeStatic = store;
 
         this.store.addRoute("ATTACK", this.attack);
+        this.store.addRoute("UPDATE_SPELL", this.updateSpell);
         this.store.addRoute("ACTIVE_SPELL", this.activeSpell);
         this.store.addRoute("DISABLE_SPELL", this.disableSpell);
         this.store.addRoute("SELECTED_SPELL", this.SelectedSpell);
@@ -36,6 +40,10 @@ export class HeroService {
 
     };
 
+    updateSpell(prev, action) {
+        return _.merge(prev, action.state);
+    }
+
     activeSpell(prev, action) {
         if (action.spell.endOfCooldown > Date.now()) {
             let diff = (action.spell.endOfCooldown - Date.now()) / 1000;
@@ -48,7 +56,7 @@ export class HeroService {
         date = date.setSeconds(date.getSeconds() + action.spell.cooldown/100);
         prev.hero.inventory.spells.forEach(function (spell, i) {
             if (spell.name == action.spell.name) {
-                let clone = JSON.parse(JSON.stringify(prev));
+                let clone = {hero: {inventory: {spells: [] }}};
                 clone.hero.inventory.spells[i] = _.merge(prev.hero.inventory.spells[i], {
                     endOfCooldown: date,
                     isCooldown: true
@@ -62,11 +70,11 @@ export class HeroService {
             if (date < Date.now()) {
                 console.log("END OF COOLDOWN FOR " + action.spell.name);
                 clearInterval(interval);
-                let clone = JSON.parse(JSON.stringify(prev));
+                let clone = {hero: {inventory: {spells: [] }}};
                 clone.hero.inventory.spells[index] = _.merge(prev.hero.inventory.spells[index], {
                     isCooldown: false
                 });
-                return prev = _.merge(prev, clone);
+                HeroService.storeStatic.dispatch({type: "UPDATE_SPELL", state: clone});
             }
         }, 1000);
 
