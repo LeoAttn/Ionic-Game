@@ -1,6 +1,3 @@
-/**
- * Created by bluedragonfly on 3/31/16.
- */
 import {Injectable} from 'angular2/core'
 import {Observable} from 'rxjs'
 import {Store} from './../store'
@@ -95,7 +92,7 @@ export class HeroService {
         //     }
         // });
     };
-    
+
     findAndRemove(array, property, value) {
         array.forEach(function (result, index) {
             if (result[property] === value) {
@@ -121,13 +118,10 @@ export class HeroService {
         var result = _.concat(spellsOfHero, action.spell);
 
         spellsInState.forEach(function (spell, i) {
-
             if (spell.name == action.spell.name) {
-                console.log(spell.name + " " + action.spell.name);
                 spellsInState.splice(i, 1);
             }
         });
-
         return _.merge(newState, {
             hero: {
                 inventory: {
@@ -138,6 +132,7 @@ export class HeroService {
                 spells: spellsInState
             }
         })
+
     }
 
     static levelupHero(prev) {

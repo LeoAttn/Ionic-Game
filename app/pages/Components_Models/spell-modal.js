@@ -46,7 +46,7 @@ export class SpellModal {
     }
 
     actionOnSpell() {
-        //this.shop.dispatch({type : 'BUY_SPELL', item: this.spell});
+        this.shop.dispatch({type : 'BUY_SPELL', item: this.spell});
         this.hero.dispatch({type: 'SELECTED_SPELL', spell: this.spell});
         this.dismiss()
     }

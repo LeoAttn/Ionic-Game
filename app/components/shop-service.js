@@ -4,7 +4,7 @@
 import {Injectable} from 'angular2/core'
 import {Observable} from 'rxjs'
 import {Store} from './../store'
-import * as R from 'ramda'
+import * as R from 'lodash/fp'
 
 @Injectable()
 export class ShopService {
@@ -51,8 +51,11 @@ export class ShopService {
             });
         }
         else {
-            action.error = "Not Enough Money";
-            return prev;
+            return R.merge(prev,{
+               action:{
+                   error: true
+               }
+            });
         }
 
     }
