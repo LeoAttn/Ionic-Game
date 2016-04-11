@@ -17,7 +17,7 @@ import {Store} from './../../store';
         </div>        
         <div>
             <h4>Health : {{healthStream | async}} / {{healthMaxStream | async}}</h4>
-            <progress max="{{healthMaxStream | async}}" value="{{healthStream | async}}"></progress> 
+            <progress  class="progress-bar" max="{{healthMaxStream | async}}" value="{{healthStream | async}}"></progress> 
         </div>
         <button round large (click)="clickBtn()" id="clicBtn">OUTCH</button>
     `,
