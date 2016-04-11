@@ -43,12 +43,26 @@ export class ShopService {
     }
 
     buySpell(prev, actions) {
-
+        var action = actions.spellComponent;
+        var status = actions.spellComponent.status;
+        var newState = _.merge(prev, {});
+        var spellsInShop = newState.shop.spells;
 
         if (prev.hero.money >= action.item.price) {
-            return _.merge(prev, {
+            spellsInShop.forEach(function (spell, i) {
+                if (spell.name == action.item.name) {
+
+                    spellsInShop[i].status = status;
+                    console.log(spellsInShop[i])
+                }
+            });
+            return _.merge(newState, {
                 hero: {
                     money: prev.hero.money - action.item.price
+
+                },
+                shop:{
+                    spells: spellsInShop
                 }
             });
         }

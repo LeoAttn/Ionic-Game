@@ -17,7 +17,7 @@ export class Store {
                 level: 1,
                 clickDamage: 1,
                 dps : 0,
-                money: 10000,
+                money: 1000000000,
                 name: "Noki",
                 inventory: {
                     spells: [],

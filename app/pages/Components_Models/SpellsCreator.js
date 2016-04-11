@@ -38,21 +38,21 @@ export class SpellComponent {
         this.shop = shopService;
         this.store = store;
         this.error = this.store.state.map(state => state.action);
-        this.status = this.spell.status
+        this.status = "";
     }
 
     buySpell() {
-        this.status = "Equiper"
-        this.shop.dispatch({type: 'BUY_SPELL', spellComponent:{spell:this.spell, status:this.status }});
+        this.status = "Equiper";
+        this.shop.dispatch({type: 'BUY_SPELL', spellComponent:{item:this.spell, status:this.status}});
     }
 
     actionSpellToInventory(){
         this.hero.dispatch({type: 'SELECTED_SPELL', spellComponent:{spell:this.spell, status:this.status }});
-        this.status = "Retirer"
     }
 
     actionOnSpell(){
-        console.log(this.spell.status);
+        this.status = this.spell.status;
+        console.log("status",this.status)
         if(this.status == "Acheter"){
             this.buySpell()
         }
@@ -60,7 +60,8 @@ export class SpellComponent {
             this.actionSpellToInventory()
         }
         else{
-            this.actionSpellToInventory()
+            this.actionSpellToInventory();
+            this.status = "Equiper"
         }
 
     }

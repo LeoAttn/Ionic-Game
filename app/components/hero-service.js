@@ -146,29 +146,45 @@ export class HeroService {
         var action = actions.spellComponent;
         var status = actions.spellComponent.status;
         var newState = _.merge(prev, {});
-        console.log(newState);
         var spellsOfHero = newState.hero.inventory.spells;
-
-        spellsOfHero.forEach(function (spell) {
-            if (spell.name == action.spell.name) {
-                return false
-            }
-        });
-        var result = _.concat(spellsOfHero, action.spell);
+        var spellsInShop = newState.shop.spells;
 
         if(status == "Equiper"){
+            spellsOfHero.forEach(function (spell) {
+                if (spell.name == action.spell.name) {
+                    return false
+                }
+            });
+            var spellCopy = _.merge(action.spell,{});
+            spellsInShop.forEach(function (spell,i) {
+                if (spell.name == action.spell.name) {
+                    spellsInShop[i].status = "Retirer";
+                    spellCopy.status = "Retirer";
+                }
+            });
             return _.merge(newState, {
                 hero: {
                     inventory: {
-                        spells: result
+                        spells: _.concat(spellsOfHero, spellCopy)
                     }
+                },
+                shop:{
+                    spells: spellsInShop
                 }
-            })
 
-        }else{
+            })
+        }
+        if(status == "Retirer"){
             spellsOfHero.forEach(function (spell, i) {
                 if (spell.name == action.spell.name) {
                     spellsOfHero.splice(i, 1);
+                    spellsInShop.forEach(function(spell, i){
+                        if (spell.name == action.spell.name){
+                            spellsInShop[i].status = "Equiper";
+
+                        }
+                    });
+
                 }
             });
             return _.merge(newState, {
@@ -176,10 +192,13 @@ export class HeroService {
                     inventory: {
                         spells: spellsOfHero
                     }
+                },
+                shop:{
+                    spells: spellsInShop
                 }
             })
-        }
 
+        }
     }
 
     static levelupHero(prev) {
