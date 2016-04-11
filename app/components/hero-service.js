@@ -4,11 +4,16 @@ import {Store} from './../store'
 import * as _ from 'lodash/fp'
 @Injectable()
 export class HeroService {
+    static storeStatic;
+
     constructor(store:Store) {
         this.store = store;
         this.hero = this.store.state.map(state => state.hero);
+        HeroService.storeStatic = store;
 
         this.store.addRoute("ATTACK", this.attack);
+        this.store.addRoute("DPS", this.dps);
+        this.store.addRoute("UPDATE_SPELL", this.updateSpell);
         this.store.addRoute("ACTIVE_SPELL", this.activeSpell);
         this.store.addRoute("DISABLE_SPELL", this.disableSpell);
         this.store.addRoute("SELECTED_SPELL", this.SelectedSpell);
@@ -19,19 +24,36 @@ export class HeroService {
         this.store.dispatch(action);
     };
 
+    dps(prev, action){
+        if(prev.monster.health - prev.hero.dps <=0){
+            return HeroService.levelupHero(prev);
+        }
+        else{
+            return _.merge(prev, {
+                monster: {
+                    health: prev.monster.health - prev.hero.dps
+                }
+            })
+        }
+    }
+
     attack(prev, action) {
-        if (prev.monster.health - prev.hero.attack <= 0) {
+        if (prev.monster.health - prev.hero.clickDamage <= 0) {
             return HeroService.levelupHero(prev);
         }
         else {
             return _.merge(prev, {
                 monster: {
-                    health: prev.monster.health - prev.hero.attack
+                    health: prev.monster.health - prev.hero.clickDamage
                 }
             })
         }
 
     };
+
+    updateSpell(prev, action) {
+        return _.merge(prev, action.state);
+    }
 
     activeSpell(prev, action) {
         if (action.spell.endOfCooldown > Date.now()) {
@@ -41,14 +63,17 @@ export class HeroService {
         }
 
         let date = new Date();
-        date = date.setSeconds(date.getSeconds() + action.spell.cooldown/10);
+        let index = -1;
+        date = date.setSeconds(date.getSeconds() + action.spell.cooldown/100);
         prev.hero.inventory.spells.forEach(function (spell, i) {
             if (spell.name == action.spell.name) {
-                let clone = JSON.parse(JSON.stringify(prev));
+                let clone = {hero: {inventory: {spells: [] }}};
                 clone.hero.inventory.spells[i] = _.merge(prev.hero.inventory.spells[i], {
-                    endOfCooldown: date
+                    endOfCooldown: date,
+                    isCooldown: true
                 });
                 prev = _.merge(prev, clone);
+                index = i;
             }
         });
 
@@ -56,6 +81,11 @@ export class HeroService {
             if (date < Date.now()) {
                 console.log("END OF COOLDOWN FOR " + action.spell.name);
                 clearInterval(interval);
+                let clone = {hero: {inventory: {spells: [] }}};
+                clone.hero.inventory.spells[index] = _.merge(prev.hero.inventory.spells[index], {
+                    isCooldown: false
+                });
+                HeroService.storeStatic.dispatch({type: "UPDATE_SPELL", state: clone});
             }
         }, 1000);
 
@@ -70,7 +100,7 @@ export class HeroService {
             case 'Punch of King':
                 prev = _.merge(prev, {
                     monster: {
-                        health: prev.monster.health - Math.round(prev.hero.attack * Math.pow(1.2, prev.hero.level))
+                        health: prev.monster.health - Math.round(prev.hero.clickDamage * Math.pow(1.2, prev.hero.level))
                     }
                 });
                 break;
@@ -84,7 +114,7 @@ export class HeroService {
             default:
                 console.log('Spell no exist !');
                 break;
-        }
+        };
 
         if (prev.monster.health <= 0)
             return HeroService.levelupHero(prev);
