@@ -11,10 +11,13 @@
 - Guillaume
 - Léo
 
+# Local Storage :
+
 | Hero          | Monster       |
 |:-------------:|:-------------:|
-| name          |  name         |
-| money         | health        |
-| attack damage |
-| level         |
-| spells        |
+| level         |  level        |
+| clickDamage   | health        |
+| dps           | healthMax     |
+| money         | name          |
+| name          |
+| inventory     |
