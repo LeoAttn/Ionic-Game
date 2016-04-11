@@ -15,6 +15,7 @@ export class HeroService {
         HeroService.storeStatic = store;
 
         this.store.addRoute("ATTACK", this.attack);
+        this.store.addRoute("DPS", this.dps);
         this.store.addRoute("UPDATE_SPELL", this.updateSpell);
         this.store.addRoute("ACTIVE_SPELL", this.activeSpell);
         this.store.addRoute("DISABLE_SPELL", this.disableSpell);
@@ -26,14 +27,27 @@ export class HeroService {
         this.store.dispatch(action);
     };
 
+    dps(prev, action){
+        if(prev.monster.health - prev.hero.dps <=0){
+            return HeroService.levelupHero(prev);
+        }
+        else{
+            return _.merge(prev, {
+                monster: {
+                    health: prev.monster.health - prev.hero.dps
+                }
+            })
+        }
+    }
+
     attack(prev, action) {
-        if (prev.monster.health - prev.hero.attack <= 0) {
+        if (prev.monster.health - prev.hero.clickDamage <= 0) {
             return HeroService.levelupHero(prev);
         }
         else {
             return _.merge(prev, {
                 monster: {
-                    health: prev.monster.health - prev.hero.attack
+                    health: prev.monster.health - prev.hero.clickDamage
                 }
             })
         }
@@ -89,7 +103,7 @@ export class HeroService {
             case 'Punch of King':
                 prev = _.merge(prev, {
                     monster: {
-                        health: prev.monster.health - Math.round(prev.hero.attack * Math.pow(1.2, prev.hero.level))
+                        health: prev.monster.health - Math.round(prev.hero.clickDamage * Math.pow(1.2, prev.hero.level))
                     }
                 });
                 break;
@@ -103,7 +117,7 @@ export class HeroService {
             default:
                 console.log('Spell no exist !');
                 break;
-        }
+        };
 
         if (prev.monster.health <= 0)
             return HeroService.levelupHero(prev);

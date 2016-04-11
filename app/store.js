@@ -4,8 +4,7 @@
 import {Injectable} from 'angular2/core';
 import {StorageService} from './storage-service';
 import {Router} from './router'
-import {Observable, Subject, BehaviorSubject} from 'rxjs';
-import * as _ from 'lodash/fp'
+import {Observable, Subject} from 'rxjs';
 
 @Injectable()
 export class Store {
@@ -16,7 +15,8 @@ export class Store {
         this.initState = {
             hero: {
                 level: 1,
-                attack: 1,
+                clickDamage: 1,
+                dps : 0,
                 money: 10000,
                 name: "Noki",
                 inventory: {
@@ -33,19 +33,12 @@ export class Store {
             shop: {
                 items: [
                     {
-                        name: "Doigt",//Un clic supplémentaire par doigt,
-                        price: 1,
-                        type: "equipement"
-                    },
-                    {
                         name: "Bras Mécanique",//Structure de base
-                        price: 10,
-                        type: "equipement"
+                        price: 10
                     },
                     {
                         name: "",
-                        price: 100,
-                        type: "equipement"
+                        price: 100
                     }
                 ],
                 spells: [
@@ -93,19 +86,16 @@ export class Store {
         this.actionStream = new Subject();
 
         this.addRoute('STARTUP', this.startup);
-
         this.state = this.actionStream
             .scan((prevState, action) => {
-                console.log("Action : ", action);
-                console.log("PREV : ", prevState);
                 var next = this.router.route(prevState, action);
-                console.log("CURRENT : ", next);
                 return next;
             }, this.initState)
-            .publishReplay(1).refCount()
+            .publishReplay(1).refCount();
 
         this.storage.initOrGet("state", JSON.stringify(this.initState)).map(state => JSON.parse(state)).subscribe(state => {
             this.actionStream.next({type: 'STARTUP', state: state});
+            setInterval(()=>{this.actionStream.next({type : 'DPS'})}, 1000)
         });
 
         this.state.map(state=>JSON.stringify(state)).subscribe(state => {

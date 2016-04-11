@@ -24,6 +24,12 @@ export class Clicker {
         this.levelStream = this.store.state.map(state => state.monster.level);
         this.healthStream = this.store.state.map(state => state.monster.health);
         this.healthMaxStream = this.store.state.map(state => state.monster.healthMax);
+
+        this.dpsStream = Observable.interval(1000, ()=> {
+            console.log("XD");
+            this.hero.dispatch({type : 'DPS'});
+        });
+
     };
 
     clickBtn() {

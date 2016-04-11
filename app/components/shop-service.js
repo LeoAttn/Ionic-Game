@@ -4,7 +4,8 @@
 import {Injectable} from 'angular2/core'
 import {Observable} from 'rxjs'
 import {Store} from './../store'
-import * as R from 'lodash/fp'
+import * as _ from 'lodash/fp'
+import * as R from 'ramda'
 
 
 @Injectable()
@@ -16,8 +17,8 @@ export class ShopService {
         this.items = [];
         this.shop.subscribe(shop => this.items = shop.items);
 
-        this.store.addRoute("BUY_ITEM", this.buyItem)
-        this.store.addRoute("BUY_SPELL", this.buySpell)
+        this.store.addRoute("BUY_ITEM", this.buyItem);
+        this.store.addRoute("BUY_SPELL", this.buySpell);
     }
 
     dispatch(action) {
@@ -26,15 +27,14 @@ export class ShopService {
 
     buyItem(prev, action) {
         if (prev.hero.money >= action.item.price) {
-            return R.merge(prev, {
+            return _.merge(prev, {
                 hero: {
                     money: prev.hero.money - action.item.price,
-                    inventory: {
-                        equipement: R.append(action.item, prev.hero.inventory)
+                    clickDamage : prev.hero.clickDamage +1, //action.item.clickUp,
+                    dps : prev.hero.dps + 1,//action.item.dpsUp,
+                    inventory: _.merge(prev.hero.inventory, _.concat(prev.hero.inventory[action.item.type], action.item))
                 }
-            }
-        });
-
+            });
         }
         else {
             action.error = "Not Enough Money";
@@ -45,7 +45,7 @@ export class ShopService {
     buySpell(prev, action){
 
         if (prev.hero.money >= action.item.price) {
-            return R.merge(prev, {
+            return _.merge(prev, {
                 hero: {
                     money: prev.hero.money - action.item.price
                 }

@@ -15,6 +15,7 @@ import {ShopService} from './../../components/shop-service';
     </div>
     `
 })
+
 export class Buyable {
     @Input() item
 
