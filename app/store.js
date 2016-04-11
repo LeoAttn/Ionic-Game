@@ -17,7 +17,7 @@ export class Store {
                 level: 1,
                 clickDamage: 1,
                 dps : 0,
-                money: 1000000000,
+                money: 0,
                 name: "Noki",
                 inventory: {
                     arms : [
@@ -68,7 +68,7 @@ export class Store {
                     {
                         name: 'X2',
                         description: "attaque X2 pendant 30sec",
-                        price: 1000,
+                        price: 200,
                         cooldown: 600, //secondes
                         timeEffect: 30,
                         status: "Acheter"
@@ -77,7 +77,7 @@ export class Store {
                     {
                         name: 'Fireball',
                         description: "inflige 1000 X lvl à l'ennemi",
-                        price: 10000,
+                        price: 1000,
                         cooldown: 1800 ,
                         status: "Acheter"
                     },
@@ -85,7 +85,7 @@ export class Store {
                     {
                         name: 'Warrior soul',
                         description: "dps des armes X 3 pendant 1min",
-                        price: 100000,
+                        price: 10000,
                         cooldown: 3600, //seconde
                         timeEffect: 60,
                         status: "Acheter"
@@ -94,7 +94,7 @@ export class Store {
                     {
                         name: "Punch of King",
                         description: " inflige attaque X lvl",
-                        price: 1000000,
+                        price: 100000,
                         cooldown: 1200,
                         status: "Acheter"
                     },
@@ -102,7 +102,7 @@ export class Store {
                     {
                         name: "Zeus roar",
                         description: "divise la vie de l'ennemi par le lvl actuel",
-                        price: 10000000,
+                        price: 1000000,
                         cooldown: 86400,
                         status: "Acheter"
                     }
@@ -126,6 +126,8 @@ export class Store {
         this.storage.initOrGet("state", JSON.stringify(this.initState)).map(state => JSON.parse(state)).subscribe(state => {
             state.hero.clickMultiplicator = 1;
             state.hero.dpsMultiplicator = 1;
+            // state.hero.money = 1000000 - 10;
+            // state.monster.health = 150;
             this.actionStream.next({type: 'STARTUP', state: state});
             setInterval(()=>{this.actionStream.next({type : 'DPS'})}, 1000)
         });

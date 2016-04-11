@@ -10,9 +10,9 @@ import {Store} from './../../store';
     template: `
         <h3>Spells</h3>
         <ion-row>
-            <ion-col width-20 *ngFor="#spell of spellsJSON">
+            <ion-col width-20 *ngFor="#spell of spells">
                 <div *ngIf="spell.isCooldown">
-                    <button danger outline (click)="spellActive(spell)">{{spell.name}}</button>
+                    <button disabled danger outline (click)="spellActive(spell)">{{spell.name}}</button>
                 </div>
                 <div *ngIf="!spell.isCooldown">
                     <button secondary outline (click)="spellActive(spell)">{{spell.name}}</button>
@@ -27,8 +27,7 @@ export class SpellsBar {
         this.hero = hero;
         this.store = store;
 
-        this.spells = this.store.state.map(state => state.hero.inventory.spells);
-        this.spells.subscribe(spell => this.spellsJSON = spell);
+        this.store.state.map(state => state.hero.inventory.spells).subscribe(spell => this.spells = spell);
     };
 
     spellActive(spell) {

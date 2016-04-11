@@ -21,7 +21,12 @@ import {Store} from '../../store'
                 <ion-list>
                     <ion-list-header>Cost</ion-list-header>
                     <ion-item>{{spell.price}} Gils</ion-item>
-                       <button class="button button-dark" (click)=actionOnSpell()>{{spell.status}}</button>
+                        <div *ngIf="spell.status != 'Acheter' || spell.price < money">
+                            <button dark (click)=actionOnSpell()>{{spell.status}}</button>
+                        </div>
+                        <div *ngIf="spell.status == 'Acheter' && spell.price > money">
+                            <button disabled dark (click)=actionOnSpell()>{{spell.status}}</button>
+                        </div>
 
                 </ion-list>
             </ion-card-content>
@@ -38,6 +43,7 @@ export class SpellComponent {
         this.shop = shopService;
         this.store = store;
         this.error = this.store.state.map(state => state.action);
+        this.store.state.map(state => state.hero.money).subscribe(money => this.money = money);
         this.status = "";
     }
 
