@@ -16,7 +16,9 @@ export class Store {
             hero: {
                 level: 1,
                 clickDamage: 1,
+                clickMultiplicator: 1,
                 dps : 0,
+                dpsMultiplicator: 1,
                 money: 0,
                 name: "Noki",
                 inventory: {
@@ -121,13 +123,14 @@ export class Store {
             }, this.initState)
             .publishReplay(1).refCount();
 
-//this.storage.remove("state");
+// this.storage.remove("state");
 
         this.storage.initOrGet("state", JSON.stringify(this.initState)).map(state => JSON.parse(state)).subscribe(state => {
             state.hero.clickMultiplicator = 1;
             state.hero.dpsMultiplicator = 1;
-            // state.hero.money = 1000000 - 10;
+            // state.hero.money = 100000 - 10;
             // state.monster.health = 150;
+            // state.hero.dps = 20;
             this.actionStream.next({type: 'STARTUP', state: state});
             setInterval(()=>{this.actionStream.next({type : 'DPS'})}, 1000)
         });

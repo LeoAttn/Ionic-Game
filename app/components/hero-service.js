@@ -244,7 +244,7 @@ export class HeroService {
     static levelupHero(prev) {
         let level = _.add(prev.hero.level, 1);
         let health = Math.round(2 + Math.pow(1.4, prev.hero.level));
-        let money = _.add(prev.hero.money, Math.round(Math.pow(1.2, prev.hero.level)));
+        let money = _.add(prev.hero.money, Math.round(10*Math.pow(1.2, prev.hero.level)));
         return _.merge(prev, {
             hero: {
                 level: level,

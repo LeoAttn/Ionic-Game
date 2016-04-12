@@ -19,14 +19,22 @@ import {Store} from '../../store'
                     <ion-item>{{spell.description}}</ion-item>
                 </ion-list>
                 <ion-list>
-                    <ion-list-header>Cost</ion-list-header>
-                    <ion-item>{{spell.price}} Gils</ion-item>
-                        <div *ngIf="spell.status != 'Acheter' || spell.price < money">
-                            <button dark (click)=actionOnSpell()>{{spell.status}}</button>
-                        </div>
-                        <div *ngIf="spell.status == 'Acheter' && spell.price > money">
-                            <button disabled dark (click)=actionOnSpell()>{{spell.status}}</button>
-                        </div>
+                <ion-row>
+                    <ion-col class="no-flex">
+                        <ion-list-header>Cost</ion-list-header>
+                        <ion-item>{{spell.price}} Gils</ion-item>
+                    </ion-col>
+                    <ion-col class="no-flex" *ngIf="spell.timeEffect">
+                        <ion-list-header>Duration</ion-list-header>
+                        <ion-item>{{spell.timeEffect}} s</ion-item>
+                    </ion-col>
+                </ion-row>
+                    <div *ngIf="spell.status != 'Acheter' || spell.price < money">
+                        <button dark (click)=actionOnSpell()>{{spell.status}}</button>
+                    </div>
+                    <div *ngIf="spell.status == 'Acheter' && spell.price > money">
+                        <button disabled dark (click)=actionOnSpell()>{{spell.status}}</button>
+                    </div>
 
                 </ion-list>
             </ion-card-content>
