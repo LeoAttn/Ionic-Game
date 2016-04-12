@@ -33,7 +33,7 @@ export class ShopService {
                 hero: {
                     money: prev.hero.money - action.item.price,
                     clickDamage: prev.hero.clickDamage + action.item.clickUp,
-                    dps: prev.hero.clickDamage + action.item.dps,
+                    dps: prev.hero.clickDamage + action.item.dpsUp,
                     inventory: {
                         arms: _.concat(prev.hero.inventory.arms, {name: action.item.name, free: true})
                     }
@@ -43,32 +43,40 @@ export class ShopService {
     }
 
     buyItem(prev, action) {
+        console.log("buyItem(", prev,")");
         if (prev.hero.money >= action.item.price) {
-            var freeArms = _.filter(prev.hero.inventory.arms, {free: true});
-            if (freeArms && freeArms.count >= action.item.armRequired) {
-                var i = 0;
-                var arms = prev.hero.inventory.arms;
-                arms.foreach(function(arm){
-                    if(arm.free && i != action.item.armRequired){
-                        arm.free = false;
+            var i = 0;
+            var arms = [];
+            console.log("ARMS : ",prev.hero.inventory.arms);
+            prev.hero.inventory.arms.forEach(function(arm){
+                if(action.item.armRequired) {
+                    console.log("NB ARM",action.item.armRequired);
+                    if(i != action.item.armRequired&& arm.free ==true) {
+                        arms  =  _.concat(arms, _.merge(arm, {free : false}));
                         i++;
+                    }else{
+                        arms  =  _.concat(arms, arm);
                     }
-                });
+                }
+            });
 
+            if(i >= action.item.armRequired)
+            {
                 return _.merge(prev, {
                     hero: {
                         money: prev.hero.money - action.item.price,
                         clickDamage: prev.hero.clickDamage + action.item.clickUp,
                         dps: prev.hero.dps + action.item.dpsUp,
                         inventory: {
-                            arms : arms,
+                            arms : _.merge(prev.hero.inventory.arms, arms),
                             equipement: _.concat(prev.hero.inventory.equipement, action.item)
                         }
                     }
                 });
             }
-            else {
+            else{
                 action.error = "Not Enough Arms";
+                return prev;
             }
         }
         else {

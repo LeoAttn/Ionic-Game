@@ -10,7 +10,7 @@ import {Store} from '../../store';
     selector: 'buyable',
     template: `
     <div>
-        <img src={{item.name}}.png />
+
         <h3>{{item.name}}</h3>
         <h4>{{item.price}}</h4>
         <div *ngIf="item.price < money">
@@ -35,6 +35,12 @@ export class Buyable {
     }
 
     buy(){
-        this.shopService.dispatch({type: 'BUY', item : this.item});
+        console.log("Type Item : ", this.item.type);
+        if(this.item.type == "arm"){
+            this.shopService.dispatch({type: 'BUY_ARM', item : this.item});
+        }
+        else if(this.item.type =="equipement"){
+            this.shopService.dispatch({type: 'BUY_ITEM', item : this.item});
+        }
     }
 }

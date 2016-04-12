@@ -48,13 +48,15 @@ export class Store {
                         name: "Bras Organique",//Structure de base
                         price: 100,
                         clickUp : 15,
-                        dpsUp : 0
+                        dpsUp : 0,
+                        type: "arm"
                     },
                     {
                         name: "Bras Mécanique",//Structure de base
                         price: 100000,
                         clickUp : 0,
-                        dpsUp : 100
+                        dpsUp : 100,
+                        type : "arm"
                     }
                 ],
                 equipement : [
@@ -63,7 +65,16 @@ export class Store {
                         armRequired : 1, //Number of Arm required to equip this
                         price: 100, // Price of this item
                         dpsUp : 2, // Amount of dps added
-                        clickUp : 0 //Amount of click damage added
+                        clickUp : 0, //Amount of click damage added
+                        type : "equipement"
+                    },
+                    {
+                        name : "Les milles couteaux",
+                        armRequired : 1000,
+                        price : 1000000000000000000000000000,
+                        dpsUp : 1000000000000000,
+                        clickUp : 10,
+                        type : "equipement"
                     }
                 ],
                 spells: [
@@ -123,20 +134,19 @@ export class Store {
             }, this.initState)
             .publishReplay(1).refCount();
 
-// this.storage.remove("state");
+ //this.storage.remove("state");
 
         this.storage.initOrGet("state", JSON.stringify(this.initState)).map(state => JSON.parse(state)).subscribe(state => {
             state.hero.clickMultiplicator = 1;
             state.hero.dpsMultiplicator = 1;
-            // state.hero.money = 100000 - 10;
+            //state.hero.money = 1000000 - 10;
             // state.monster.health = 150;
             // state.hero.dps = 20;
             this.actionStream.next({type: 'STARTUP', state: state});
-            setInterval(()=>{this.actionStream.next({type : 'DPS'})}, 1000)
-        });
-
-        this.state.map(state=>JSON.stringify(state)).subscribe(state => {
-            storage.set("state", state);
+            setInterval(()=>{this.actionStream.next({type : 'DPS'})}, 1000);
+            this.state.map(state2Save=>JSON.stringify(state2Save)).subscribe(state2Save => {
+                storage.set("state", state2Save);
+            });
         });
     }
 
