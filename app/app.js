@@ -1,4 +1,4 @@
-import {App, Platform} from 'ionic-angular';
+import {App, Platform, MenuController, IonicApp} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
 import {TabsPage} from './pages/tabs/tabs';
 import {StorageService} from './storage-service';
@@ -15,15 +15,33 @@ import {Store} from './store';
         //SpellService,
         HeroService
     ],
-    template: '<ion-nav [root]="rootPage"></ion-nav>',
+    template: `
+        <ion-menu id="leftMenu" [content]="content">
+          <ion-toolbar>
+            <ion-title>Menu</ion-title>
+          </ion-toolbar>
+          <ion-content>
+            <ion-list>
+              <button ion-item (click)="menuAction('RESET')">
+                Reset
+              </button>
+            </ion-list>
+          </ion-content>
+        </ion-menu>
+        
+        <ion-nav id="nav" #content [root]="rootPage"></ion-nav>
+        `,
     config: {} // http://ionicframework.com/docs/v2/api/config/Config/
 })
 export class MyApp {
     static get parameters() {
-        return [[Platform]];
+        return [[Platform], [IonicApp], [MenuController], [Store]];
     }
 
-    constructor(platform) {
+    constructor(platform, app, menu, store) {
+        this.app = app;
+        this.menu = menu;
+        this.store = store;
         this.rootPage = TabsPage;
 
         platform.ready().then(() => {
@@ -31,6 +49,14 @@ export class MyApp {
             // Here you can do any higher level native things you might need.
             StatusBar.styleDefault();
         });
+    }
+
+    menuAction(action) {
+        if (action == 'RESET')
+            this.store.dispatch({type: "RESET"});
+
+        // close the menu when clicking a link from the menu
+        this.menu.close();
     }
 
 

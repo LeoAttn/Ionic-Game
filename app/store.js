@@ -8,6 +8,8 @@ import {Observable, Subject} from 'rxjs';
 
 @Injectable()
 export class Store {
+    static initState;
+
     constructor(storage:StorageService) {
         this.storage = storage;
         this.router = new Router();
@@ -123,8 +125,10 @@ export class Store {
             },
             action: {}
         };
+        Store.initState = this.initState;
 
         this.actionStream = new Subject();
+        this.addRoute('RESET', this.reset);
         this.addRoute('STARTUP', this.startup);
         this.state = this.actionStream
             .scan((prevState, action) => {
@@ -134,25 +138,30 @@ export class Store {
             }, this.initState)
             .publishReplay(1).refCount();
 
- //this.storage.remove("state");
+// this.storage.remove("state");
 
         this.storage.initOrGet("state", JSON.stringify(this.initState)).map(state => JSON.parse(state)).subscribe(state => {
             state.hero.clickMultiplicator = 1;
             state.hero.dpsMultiplicator = 1;
-            //state.hero.money = 1000000 - 10;
+            // state.hero.money = 1000000 - 10;
             // state.monster.health = 150;
             // state.hero.dps = 20;
             this.actionStream.next({type: 'STARTUP', state: state});
             setInterval(()=>{this.actionStream.next({type : 'DPS'})}, 1000);
-            this.state.map(state2Save=>JSON.stringify(state2Save)).subscribe(state2Save => {
-                storage.set("state", state2Save);
-            });
+
+        });
+        this.state.map(state2Save=>JSON.stringify(state2Save)).subscribe(state2Save => {
+            storage.set("state", state2Save);
         });
     }
 
     startup(prev, action) {
         console.log ('state', action.state);
         return action.state;
+    }
+
+    reset(prev, action) {
+        return Store.initState;
     }
 
     dispatch(action) {

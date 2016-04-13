@@ -29,11 +29,17 @@ import {Store} from '../../store'
                         <ion-item>{{spell.timeEffect}} s</ion-item>
                     </ion-col>
                 </ion-row>
-                    <div *ngIf="spell.status != 'Acheter' || spell.price < money">
+                    <div *ngIf="spell.status == 'Acheter' && spell.price < money">
                         <button dark (click)=actionOnSpell()>{{spell.status}}</button>
                     </div>
                     <div *ngIf="spell.status == 'Acheter' && spell.price > money">
                         <button disabled dark (click)=actionOnSpell()>{{spell.status}}</button>
+                    </div>
+                    <div *ngIf="spell.status != 'Acheter'">
+                        <ion-item>
+                            <ion-label> <strong>Equiper</strong> </ion-label>
+                            <ion-toggle secondary checked="{{spell.status == 'Retirer'}}" (click)=actionOnSpell()></ion-toggle>
+                        </ion-item>
                     </div>
 
                 </ion-list>
